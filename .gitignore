@@ -1,0 +1,18 @@
+.build/win*
+.debug
+.DS_Store
+.git
+.svn
+tags
+.gdb_history
+.vscode
+*.TMP
+
+# VS IDE
+**/.vs
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
