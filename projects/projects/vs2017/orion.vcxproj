@@ -72,28 +72,28 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>..\..\win32_vs2017\bin\</OutDir>
-    <IntDir>..\..\win32_vs2017\obj\x32\Debug\example-00-helloworld\</IntDir>
+    <IntDir>..\..\win32_vs2017\obj\x32\Debug\orion\</IntDir>
     <TargetName>orion-debug</TargetName>
     <TargetExt>.exe</TargetExt>
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>..\..\win64_vs2017\bin\</OutDir>
-    <IntDir>..\..\win64_vs2017\obj\x64\Debug\example-00-helloworld\</IntDir>
+    <IntDir>..\..\win64_vs2017\obj\x64\Debug\orion\</IntDir>
     <TargetName>orion-debug</TargetName>
     <TargetExt>.exe</TargetExt>
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>..\..\win32_vs2017\bin\</OutDir>
-    <IntDir>..\..\win32_vs2017\obj\x32\Release\example-00-helloworld\</IntDir>
+    <IntDir>..\..\win32_vs2017\obj\x32\Release\orion\</IntDir>
     <TargetName>orion-release</TargetName>
     <TargetExt>.exe</TargetExt>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>..\..\win64_vs2017\bin\</OutDir>
-    <IntDir>..\..\win64_vs2017\obj\x64\Release\example-00-helloworld\</IntDir>
+    <IntDir>..\..\win64_vs2017\obj\x64\Release\orion\</IntDir>
     <TargetName>orion-release</TargetName>
     <TargetExt>.exe</TargetExt>
     <LinkIncremental>false</LinkIncremental>
@@ -295,11 +295,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\orion\src\main\orion.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\..\examples\runtime\ios-info.plist" />
-    <None Include="..\..\..\examples\runtime\osx-info.plist" />
-    <None Include="..\..\..\examples\runtime\tvos-info.plist" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
