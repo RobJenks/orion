@@ -11,7 +11,10 @@ namespace Orion
 	Orion::Orion(const char* _name, const char* _description, const char* _url)
 		:
 		entry::AppI(_name, _description, _url),
-		m_debug(0U), m_width(0U), m_height(0U), m_reset(0U)
+		m_width(0U),
+		m_height(0U),
+		m_debug(0U),
+		m_reset(0U)
 	{
 	}
 
@@ -87,7 +90,21 @@ namespace Orion
 			const auto stats = bgfx::getStats();
 			const double toMsCpu = 1000.0 / stats->cpuTimerFreq;
 			const double frameMs = double(stats->cpuTimeFrame) * toMsCpu;
-			bgfx::dbgTextPrintf(0, 1, 0x0f, "FPS: %.1f", 1000.0f / frameMs);
+
+			static const double fpsRenderInterval = 1000.0;
+			static double timeUntilNextFpsRender = 0.0;
+			static double cumulativeFrameTime = 0.0, currentFps = 0.0;
+			static int samples = 0;
+
+			cumulativeFrameTime += frameMs;
+			samples += 1;
+
+			if ((timeUntilNextFpsRender -= frameMs) <= 0.0)
+			{
+				timeUntilNextFpsRender += fpsRenderInterval;
+				currentFps = 1000.0 / (cumulativeFrameTime / samples);	// Deal with div/0
+			}
+			bgfx::dbgTextPrintf(0, 1, 0x0f, "FPS: %.1f", currentFps);
 
 			// Advance to next frame. Rendering thread will be kicked to
 			// process submitted rendering primitives.
