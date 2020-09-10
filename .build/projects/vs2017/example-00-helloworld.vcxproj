@@ -23,6 +23,7 @@
     <RootNamespace>example-00-helloworld</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <Keyword>Win32Proj</Keyword>
+    <ProjectName>orion</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -270,24 +271,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\examples\00-helloworld\src\main\logo.h" />
-    <ClInclude Include="..\..\..\examples\00-helloworld\src\main\orion.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\..\examples\runtime\iOS-Info.plist">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </None>
-    <None Include="..\..\..\examples\runtime\tvOS-Info.plist">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="example-glue.vcxproj">
       <Project>{2B1D7912-1780-08B7-C005-416DAC47D439}</Project>
     </ProjectReference>
@@ -308,7 +291,15 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\examples\00-helloworld\src\main\orion.cpp" />
+    <ClCompile Include="..\..\..\orion\src\main\orion.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\orion\src\main\orion.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\examples\runtime\ios-info.plist" />
+    <None Include="..\..\..\examples\runtime\osx-info.plist" />
+    <None Include="..\..\..\examples\runtime\tvos-info.plist" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
