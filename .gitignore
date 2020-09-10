@@ -1,4 +1,4 @@
-.build/win*
+projects/win*
 .debug
 .DS_Store
 .git
