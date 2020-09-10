@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <None Include="..\..\..\examples\runtime\ios-info.plist">
+      <Filter>runtime</Filter>
+    </None>
+    <None Include="..\..\..\examples\runtime\osx-info.plist">
+      <Filter>runtime</Filter>
+    </None>
+    <None Include="..\..\..\examples\runtime\tvos-info.plist">
+      <Filter>runtime</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{942097ad-f9d3-4b0b-b25b-afee933c7fd2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\main">
+      <UniqueIdentifier>{5024b251-6cba-447c-801e-41c2ac688f74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="runtime">
+      <UniqueIdentifier>{3283b997-6380-49bd-b7f1-9132d26bf4bf}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\orion\src\main\orion.cpp">
+      <Filter>src\main</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\orion\src\main\orion.h">
+      <Filter>src\main</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
