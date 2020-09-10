@@ -187,7 +187,7 @@ namespace Orion
 				timeUntilNextFpsRender += fpsRenderInterval;
 				currentFps = 1000.0 / (cumulativeFrameTime / samples);	// Deal with div/0
 			}
-			bgfx::dbgTextPrintf(0, 1, 0x0f, "FPS: %.1f", currentFps);
+			bgfx::dbgTextPrintf(0, 0, 0x0f, "FPS: %.1f", currentFps);
 
 			// Advance to next frame. Rendering thread will be kicked to
 			// process submitted rendering primitives.
