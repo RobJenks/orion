@@ -291,9 +291,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\orion\src\debug\render_stats.cpp" />
     <ClCompile Include="..\..\..\orion\src\main\orion.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\orion\src\debug\render_stats.h" />
     <ClInclude Include="..\..\..\orion\src\main\orion.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

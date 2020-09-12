@@ -1,4 +1,6 @@
 projects/win*
+3rdparty/**/out/build
+
 .debug
 .DS_Store
 .git
