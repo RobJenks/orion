@@ -25,15 +25,45 @@ namespace Orion
 		{ -1, 1 }	// Dir8::UP_LEFT
 	} };
 
+	const std::array<Dir8, 4> Direction::m_dir4_to_dir8 = {
+		Dir8(static_cast<int>(Dir8::UP)),		// Dir4::UP
+		Dir8(static_cast<int>(Dir8::RIGHT)),	// Dir4::RIGHT
+		Dir8(static_cast<int>(Dir8::DOWN)),		// Dir4::DOWN
+		Dir8(static_cast<int>(Dir8::LEFT))		// Dir4::LEFT
+	};
+
 
 	Vec2<int> Direction::getNeighbour(Vec2<int> location, Dir4 direction)
 	{
 		return (location + m_offsets_4[static_cast<int>(direction)]);
 	}
 
+	Vec2<int> Direction::getNeighbour(int x, int y, Dir4 direction)
+	{
+		auto neighbour = m_offsets_4[static_cast<int>(direction)];
+		neighbour.x += x;
+		neighbour.y += y;
+
+		return neighbour;
+	}
+
 	Vec2<int> Direction::getNeighbour(Vec2<int> location, Dir8 direction)
 	{
 		return (location + m_offsets_8[static_cast<int>(direction)]);
+	}
+	
+	Vec2<int> Direction::getNeighbour(int x, int y, Dir8 direction)
+	{
+		auto neighbour = m_offsets_8[static_cast<int>(direction)];
+		neighbour.x += x;
+		neighbour.y += y;
+
+		return neighbour;
+	}
+
+	Dir8 Direction::convertDir4ToDir8(Dir4 dir)
+	{
+		return m_dir4_to_dir8[static_cast<int>(dir)];
 	}
 
 

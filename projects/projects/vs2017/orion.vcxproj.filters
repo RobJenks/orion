@@ -28,6 +28,12 @@
     <Filter Include="src\util">
       <UniqueIdentifier>{715bfc45-ed8d-413f-9bde-c55365c5b42e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\tile">
+      <UniqueIdentifier>{e17ff7fb-f6c1-4788-8b93-15e1af41f683}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\container">
+      <UniqueIdentifier>{2f53e365-03f7-4c40-93dd-98078e36f10c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\orion\src\main\orion.cpp">
@@ -41,6 +47,18 @@
     </ClCompile>
     <ClCompile Include="..\..\..\orion\src\grid\direction.cpp">
       <Filter>src\grid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\orion\src\tile\tile.cpp">
+      <Filter>src\tile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\orion\src\tile\tile_def.cpp">
+      <Filter>src\tile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\orion\src\grid\rotation.cpp">
+      <Filter>src\grid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\orion\src\container\container.cpp">
+      <Filter>src\container</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -67,6 +85,27 @@
     </ClInclude>
     <ClInclude Include="..\..\..\orion\src\util\func.h">
       <Filter>src\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\orion\src\tile\tile.h">
+      <Filter>src\tile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\orion\src\tile\tile_def.h">
+      <Filter>src\tile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\orion\src\grid\rotation.h">
+      <Filter>src\grid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\orion\src\grid\rot90.h">
+      <Filter>src\grid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\orion\src\util\types.h">
+      <Filter>src\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\orion\src\container\container.h">
+      <Filter>src\container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\orion\src\grid\quadtree.h">
+      <Filter>src\grid</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

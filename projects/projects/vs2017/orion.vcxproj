@@ -291,20 +291,31 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\orion\src\container\container.cpp" />
     <ClCompile Include="..\..\..\orion\src\debug\render_stats.cpp" />
     <ClCompile Include="..\..\..\orion\src\grid\direction.cpp" />
     <ClCompile Include="..\..\..\orion\src\grid\grid.cpp" />
+    <ClCompile Include="..\..\..\orion\src\grid\rotation.cpp" />
     <ClCompile Include="..\..\..\orion\src\main\orion.cpp" />
+    <ClCompile Include="..\..\..\orion\src\tile\tile.cpp" />
+    <ClCompile Include="..\..\..\orion\src\tile\tile_def.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\orion\src\container\container.h" />
     <ClInclude Include="..\..\..\orion\src\debug\render_stats.h" />
     <ClInclude Include="..\..\..\orion\src\grid\dir4.h" />
     <ClInclude Include="..\..\..\orion\src\grid\dir8.h" />
     <ClInclude Include="..\..\..\orion\src\grid\direction.h" />
     <ClInclude Include="..\..\..\orion\src\grid\grid.h" />
+    <ClInclude Include="..\..\..\orion\src\grid\quadtree.h" />
+    <ClInclude Include="..\..\..\orion\src\grid\rot90.h" />
+    <ClInclude Include="..\..\..\orion\src\grid\rotation.h" />
     <ClInclude Include="..\..\..\orion\src\main\orion.h" />
     <ClInclude Include="..\..\..\orion\src\math\vec2.h" />
+    <ClInclude Include="..\..\..\orion\src\tile\tile.h" />
+    <ClInclude Include="..\..\..\orion\src\tile\tile_def.h" />
     <ClInclude Include="..\..\..\orion\src\util\func.h" />
+    <ClInclude Include="..\..\..\orion\src\util\types.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
