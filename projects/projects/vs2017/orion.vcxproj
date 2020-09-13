@@ -292,11 +292,19 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\orion\src\debug\render_stats.cpp" />
+    <ClCompile Include="..\..\..\orion\src\grid\direction.cpp" />
+    <ClCompile Include="..\..\..\orion\src\grid\grid.cpp" />
     <ClCompile Include="..\..\..\orion\src\main\orion.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\orion\src\debug\render_stats.h" />
+    <ClInclude Include="..\..\..\orion\src\grid\dir4.h" />
+    <ClInclude Include="..\..\..\orion\src\grid\dir8.h" />
+    <ClInclude Include="..\..\..\orion\src\grid\direction.h" />
+    <ClInclude Include="..\..\..\orion\src\grid\grid.h" />
     <ClInclude Include="..\..\..\orion\src\main\orion.h" />
+    <ClInclude Include="..\..\..\orion\src\math\vec2.h" />
+    <ClInclude Include="..\..\..\orion\src\util\func.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

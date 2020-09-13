@@ -19,6 +19,15 @@
     <Filter Include="src\debug">
       <UniqueIdentifier>{7798303f-3786-4dd7-aee4-7e4ba3bab862}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\grid">
+      <UniqueIdentifier>{bb9ebd32-60c7-4f4f-aeb2-df9c6e85a4a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\math">
+      <UniqueIdentifier>{53603431-e5f4-41c1-b6a5-07d2d3e8e8b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\util">
+      <UniqueIdentifier>{715bfc45-ed8d-413f-9bde-c55365c5b42e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\orion\src\main\orion.cpp">
@@ -27,6 +36,12 @@
     <ClCompile Include="..\..\..\orion\src\debug\render_stats.cpp">
       <Filter>src\debug</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\orion\src\grid\grid.cpp">
+      <Filter>src\grid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\orion\src\grid\direction.cpp">
+      <Filter>src\grid</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\orion\src\main\orion.h">
@@ -34,6 +49,24 @@
     </ClInclude>
     <ClInclude Include="..\..\..\orion\src\debug\render_stats.h">
       <Filter>src\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\orion\src\grid\grid.h">
+      <Filter>src\grid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\orion\src\math\vec2.h">
+      <Filter>src\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\orion\src\grid\direction.h">
+      <Filter>src\grid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\orion\src\grid\dir4.h">
+      <Filter>src\grid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\orion\src\grid\dir8.h">
+      <Filter>src\grid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\orion\src\util\func.h">
+      <Filter>src\util</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
