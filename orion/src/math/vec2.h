@@ -16,6 +16,15 @@ namespace Orion
 		Vec2<T> operator+(Vec2<T> other) const;
 		Vec2<T> & operator+=(const Vec2<T>& other);
 
+		Vec2<T> operator-(Vec2<T> other) const;
+		Vec2<T> & operator-=(const Vec2<T>& other);
+
+		Vec2<T> operator*(Vec2<T> other) const;
+		Vec2<T> & operator*=(const Vec2<T>& other);
+
+		Vec2<T> operator/(Vec2<T> other) const;
+		Vec2<T> & operator/=(const Vec2<T>& other);
+
 	};
 
 
@@ -46,6 +55,54 @@ namespace Orion
 	{
 		x += other.x;
 		y += other.y;
+
+		return *this;
+	}
+
+	template <typename T>
+	inline Vec2<T> Vec2<T>::operator-(Vec2<T> other) const
+	{
+		other -= *this;
+		return other;
+	}
+
+	template <typename T>
+	inline Vec2<T>& Vec2<T>::operator-=(const Vec2<T>& other)
+	{
+		x -= other.x;
+		y -= other.y;
+
+		return *this;
+	}
+
+	template <typename T>
+	inline Vec2<T> Vec2<T>::operator*(Vec2<T> other) const
+	{
+		other *= *this;
+		return other;
+	}
+
+	template <typename T>
+	inline Vec2<T>& Vec2<T>::operator*=(const Vec2<T>& other)
+	{
+		x *= other.x;
+		y *= other.y;
+
+		return *this;
+	}
+
+	template <typename T>
+	inline Vec2<T> Vec2<T>::operator/(Vec2<T> other) const
+	{
+		other /= *this;
+		return other;
+	}
+
+	template <typename T>
+	inline Vec2<T>& Vec2<T>::operator/=(const Vec2<T>& other)
+	{
+		x /= other.x;
+		y /= other.y;
 
 		return *this;
 	}

@@ -2,6 +2,7 @@
 #include "common.h"
 #include "bgfx_utils.h"
 #include "imgui/imgui.h"
+#include "../container/container.h"
 
 #include "orion.h"
 
@@ -84,6 +85,10 @@ namespace Orion
 
         // Initialise GUI
         imguiCreate();
+
+		// Temporary
+		Container tmp;
+		if (tmp.tmp() == 12) return;
 
         // Temporary
         PosColorVertex::init();
