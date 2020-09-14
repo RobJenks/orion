@@ -87,8 +87,13 @@ namespace Orion
         imguiCreate();
 
 		// Temporary
+		Vec2<int> a(2, 2), b(8, 8);
+
+		auto c = a + b;
+		auto d = b / a;
+
 		Container tmp;
-		if (tmp.tmp() == 12) return;
+		exit(tmp.tmp());
 
         // Temporary
         PosColorVertex::init();

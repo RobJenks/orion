@@ -14,7 +14,10 @@ namespace Orion
 		Vec2<int> pos;
 		size_t value;
 
+		tmps(Vec2<int> _pos, size_t _value) : pos(_pos), value(_value) { }
 		inline Vec2<int> getPosition() const { return pos; }
+		inline size_t getValue() const { return value; }
+
 	};
 
 
@@ -27,7 +30,7 @@ namespace Orion
 	private:
 
 		Grid				m_grid;
-		Quadtree<tmps>	m_tree;
+		Quadtree<tmps, int>	m_tree;
 		std::vector<Tile>	m_tiles;
 
 

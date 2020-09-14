@@ -13,16 +13,13 @@ namespace Orion
 		Vec2();
 		Vec2(T _x, T _y);
 
-		Vec2<T> operator+(Vec2<T> other) const;
+		Vec2<T>& operator=(const Vec2<T>& other);
+		bool operator==(const Vec2<T>& other);
+		bool operator!=(const Vec2<T>& other);
+
 		Vec2<T> & operator+=(const Vec2<T>& other);
-
-		Vec2<T> operator-(Vec2<T> other) const;
 		Vec2<T> & operator-=(const Vec2<T>& other);
-
-		Vec2<T> operator*(Vec2<T> other) const;
 		Vec2<T> & operator*=(const Vec2<T>& other);
-
-		Vec2<T> operator/(Vec2<T> other) const;
 		Vec2<T> & operator/=(const Vec2<T>& other);
 
 	};
@@ -43,11 +40,32 @@ namespace Orion
 	{
 	}
 
+
 	template <typename T>
-	inline Vec2<T> Vec2<T>::operator+(Vec2<T> other) const
+	Vec2<T>& Vec2<T>::operator=(const Vec2<T>& other)
 	{
-		other += *this;
-		return other;
+		x = other.x;
+		y = other.y;
+		return *this;
+	}
+
+	template <typename T>
+	bool Vec2<T>::operator==(const Vec2<T>& other)
+	{
+		return x == other.x && y == other.y;
+	}
+
+	template <typename T>
+	bool Vec2<T>::operator!=(const Vec2<T>& other)
+	{
+		return !(*this == other);
+	}
+
+	template <typename T>
+	inline Vec2<T> operator+(Vec2<T> lhs, const Vec2<T>& rhs)
+	{
+		lhs += rhs;
+		return lhs;
 	}
 
 	template <typename T>
@@ -60,10 +78,10 @@ namespace Orion
 	}
 
 	template <typename T>
-	inline Vec2<T> Vec2<T>::operator-(Vec2<T> other) const
+	inline Vec2<T> operator-(Vec2<T> lhs, const Vec2<T>& rhs)
 	{
-		other -= *this;
-		return other;
+		lhs -= rhs;
+		return lhs;
 	}
 
 	template <typename T>
@@ -76,10 +94,10 @@ namespace Orion
 	}
 
 	template <typename T>
-	inline Vec2<T> Vec2<T>::operator*(Vec2<T> other) const
+	inline Vec2<T> operator*(Vec2<T> lhs, const Vec2<T>& rhs)
 	{
-		other *= *this;
-		return other;
+		lhs *= rhs;
+		return lhs;
 	}
 
 	template <typename T>
@@ -92,10 +110,10 @@ namespace Orion
 	}
 
 	template <typename T>
-	inline Vec2<T> Vec2<T>::operator/(Vec2<T> other) const
+	inline Vec2<T> operator/(Vec2<T> lhs, const Vec2<T>& rhs)
 	{
-		other /= *this;
-		return other;
+		lhs /= rhs;
+		return lhs;
 	}
 
 	template <typename T>

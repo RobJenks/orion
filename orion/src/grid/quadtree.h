@@ -8,7 +8,7 @@
 
 namespace Orion
 {
-	template <typename T>
+	template <typename T, typename TCoord>
 	class Quadtree
 	{
 	public:
@@ -16,7 +16,7 @@ namespace Orion
 		static const NodeIndex NO_NODE = std::numeric_limits<NodeIndex>::max();
 		enum class ChildNode { TopRight = 0, BottomRight = 1, BottomLeft = 2, TopLeft = 3 };
 
-		static const size_t MAX_NODE_ITEMS = 16U;		// Maximum number of items which can be accepted by a node before it attempts to subdivide
+		static const size_t MAX_NODE_ITEMS = 2;//16U;		// Maximum number of items which can be accepted by a node before it attempts to subdivide
 		static const int MIN_NODE_SIZE = 4;				// Minimum size of nodes in any dimension, beyond which they will never subdivide, even if over item limit
 
 
@@ -24,14 +24,14 @@ namespace Orion
 		class Node
 		{
 		public:
-			Node(NodeIndex id, NodeIndex parent, Vec2<int> minBounds, Vec2<int> maxBounds);
+			Node(NodeIndex id, NodeIndex parent, Vec2<TCoord> minBounds, Vec2<TCoord> maxBounds);
 
 			NodeIndex getId() const;
 			NodeIndex getParent() const;
 
-			Vec2<int> getMinBounds() const;
-			Vec2<int> getMaxBounds() const;
-			Vec2<int> getCentrePoint() const;
+			Vec2<TCoord> getMinBounds() const;
+			Vec2<TCoord> getMaxBounds() const;
+			Vec2<TCoord> getCentrePoint() const;
 			bool canSubdivide() const;
 
 			bool isRoot() const;
@@ -50,9 +50,9 @@ namespace Orion
 			bool removeItemDirect(T item);
 			void clearItemsDirect();
 
-			bool		containsPoint(Vec2<int> point) const;
-			bool		containsRegion(Vec2<int> minPoint, Vec2<int> maxPoint) const;
-			ChildNode	getChildContainingPoint(Vec2<int> point) const;
+			bool		containsPoint(Vec2<TCoord> point) const;
+			bool		containsRegion(Vec2<TCoord> minPoint, Vec2<TCoord> maxPoint) const;
+			ChildNode	getChildContainingPoint(Vec2<TCoord> point) const;
 
 
 		private:
@@ -62,36 +62,39 @@ namespace Orion
 			NodeIndex							m_parent;
 			std::array<typename NodeIndex, 4>	m_children;
 
-			Vec2<int>							m_min_bounds;
-			Vec2<int>							m_max_bounds;
-			Vec2<int>							m_centre;
+			Vec2<TCoord>							m_min_bounds;
+			Vec2<TCoord>							m_max_bounds;
+			Vec2<TCoord>							m_centre;
 		};
 
 
 	public:
 
-		Quadtree(Vec2<int> minBounds, Vec2<int> maxBounds);
+		Quadtree(Vec2<TCoord> minBounds, Vec2<TCoord> maxBounds);
 
 		NodeIndex	addItem(T item);
 		NodeIndex	addItem(NodeIndex index, T item);
+
+		NodeIndex	addItemAtPosition(T item, Vec2<TCoord> pos);
+		NodeIndex	addItemAtPosition(NodeIndex index, T item, Vec2<TCoord> pos);
 
 		bool		removeItem(T item);
 		bool		removeItem(NodeIndex index, T item);
 
 		void		clearItems();
 
-		void		findItems(Vec2<int> minPos, Vec2<int> maxPos, std::vector<T> & outItems) const;
+		void		findItems(Vec2<TCoord> minPos, Vec2<TCoord> maxPos, std::vector<T> & outItems) const;
 
 		void		subdivide(NodeIndex index);
 
-		void		itemMoved(T item, Vec2<int> oldPosition);
+		void		itemMoved(T item, Vec2<TCoord> oldPosition);
 
 	private:
 
-		NodeIndex	newNode(NodeIndex parent, Vec2<int> minBounds, Vec2<int> maxBounds);
+		NodeIndex	newNode(NodeIndex parent, Vec2<TCoord> minBounds, Vec2<TCoord> maxBounds);
 
 		void		getItemsRecursive(NodeIndex index, std::vector<T>& items) const;
-		NodeIndex   getLeafNodeContainingPoint(Vec2<int> pos) const;
+		NodeIndex   getLeafNodeContainingPoint(Vec2<TCoord> pos) const;
 
 		void		deleteSingleNode(NodeIndex index);
 		void		deleteSubtree(NodeIndex index);
@@ -111,8 +114,8 @@ namespace Orion
 	/* Quadtree implementation												 */
 	/* ********************************************************************* */
 
-	template <typename T>
-	Quadtree<T>::Quadtree(Vec2<int> minBounds, Vec2<int> maxBounds)
+	template <typename T, typename TCoord>
+	Quadtree<T, TCoord>::Quadtree(Vec2<TCoord> minBounds, Vec2<TCoord> maxBounds)
 		:
 		m_nodes(),
 		m_free_nodes()
@@ -120,13 +123,13 @@ namespace Orion
 		newNode(NO_NODE, minBounds, maxBounds);
 	}
 
-	template <typename T>
-	typename Quadtree<T>::NodeIndex Quadtree<T>::newNode(NodeIndex parent, Vec2<int> minBounds, Vec2<int> maxBounds)
+	template <typename T, typename TCoord>
+	typename Quadtree<T, TCoord>::NodeIndex Quadtree<T, TCoord>::newNode(NodeIndex parent, Vec2<TCoord> minBounds, Vec2<TCoord> maxBounds)
 	{
 		// Reuse a node from the free list if available
 		if (!m_free_nodes.empty())
 		{
-			Quadtree<T>::NodeIndex index = m_free_nodes.back();
+			Quadtree<T, TCoord>::NodeIndex index = m_free_nodes.back();
 			m_free_nodes.pop_back();
 			m_nodes[index] = Node(index, parent, minBounds, maxBounds);
 
@@ -134,22 +137,22 @@ namespace Orion
 		}
 
 		// Allocate a new node
-		Quadtree<T>::NodeIndex index = m_nodes.size();
+		Quadtree<T, TCoord>::NodeIndex index = m_nodes.size();
 		m_nodes.push_back(Node(index, parent, minBounds, maxBounds));
 
 		return index;
 	}
 
 	// Deletes a single node without considering any relationships to other nodes in the tree
-	template <typename T>
-	void Quadtree<T>::deleteSingleNode(NodeIndex index)
+	template <typename T, typename TCoord>
+	void Quadtree<T, TCoord>::deleteSingleNode(NodeIndex index)
 	{
 		m_free_nodes.push_back(index);
 	}
 	
 	// Deletes a node and all child nodes below it.  Items are not reallocated and are simply discarded
-	template <typename T>
-	void Quadtree<T>::deleteSubtree(NodeIndex index)
+	template <typename T, typename TCoord>
+	void Quadtree<T, TCoord>::deleteSubtree(NodeIndex index)
 	{
 		const auto& node = m_nodes[index];
 		if (node.hasChildren())
@@ -164,10 +167,10 @@ namespace Orion
 		deleteSingleNode(index);
 	}
 
-	template <typename T>
-	void Quadtree<T>::attemptToCollapseNode(NodeIndex index)
+	template <typename T, typename TCoord>
+	void Quadtree<T, TCoord>::attemptToCollapseNode(NodeIndex index)
 	{
-		Quadtree<T>::Node & node = m_nodes[index];
+		Quadtree<T, TCoord>::Node & node = m_nodes[index];
 
 		// Only need to clean up if we do have child nodes
 		if (!node.hasChildren()) return;
@@ -187,30 +190,44 @@ namespace Orion
 		deleteSubtree(children[3]);
 	}
 	
-	template <typename T>
-	typename Quadtree<T>::NodeIndex Quadtree<T>::getRoot() const
+	template <typename T, typename TCoord>
+	typename Quadtree<T, TCoord>::NodeIndex Quadtree<T, TCoord>::getRoot() const
 	{
 		return 0;	// Root node will always be at the first location
 	}
 	
-	template <typename T>
-	typename Quadtree<T>::NodeIndex Quadtree<T>::addItem(T item)
+	template <typename T, typename TCoord>
+	typename Quadtree<T, TCoord>::NodeIndex Quadtree<T, TCoord>::addItem(T item)
 	{
-		return addItem(getRoot(), item);
+		return addItemAtPosition(getRoot(), item, item.getPosition());
 	}
 
-	template <typename T>
-	typename Quadtree<T>::NodeIndex Quadtree<T>::addItem(NodeIndex index, T item)
+	template <typename T, typename TCoord>
+	typename Quadtree<T, TCoord>::NodeIndex Quadtree<T, TCoord>::addItem(NodeIndex index, T item)
+	{
+		return addItemAtPosition(index, item, item.getPosition());
+	}
+	
+	template <typename T, typename TCoord>
+	typename Quadtree<T, TCoord>::NodeIndex Quadtree<T, TCoord>::addItemAtPosition(T item, Vec2<TCoord> pos)
+	{
+		return addItemAtPosition(getRoot(), item, pos);
+	}
+
+	template <typename T, typename TCoord>
+	typename Quadtree<T, TCoord>::NodeIndex Quadtree<T, TCoord>::addItemAtPosition(NodeIndex index, T item, Vec2<TCoord> pos)
 	{
 		// If the item will not fit within this tree then quit immediately
 		Node& node = m_nodes[index];
-		const auto& pos = item.getPosition();
 		if (!node.containsPoint(pos)) return NO_NODE;
 
 		// Locate the leaf node where this item should be added
 		while (node.hasChildren())
 		{
-			index = node.getChildContainingPoint(pos);
+			const auto child = node.getChildContainingPoint(pos);
+			index = node.getChildren()[static_cast<int>(child)];
+			assert(index != NO_NODE);
+
 			node = m_nodes[index];
 		}
 
@@ -231,14 +248,14 @@ namespace Orion
 		return index;
 	}
 
-	template <typename T>
-	bool Quadtree<T>::removeItem(T item)
+	template <typename T, typename TCoord>
+	bool Quadtree<T, TCoord>::removeItem(T item)
 	{
 		return removeItem(getRoot(), item);
 	}
 
-	template <typename T>
-	bool Quadtree<T>::removeItem(NodeIndex index, T item)
+	template <typename T, typename TCoord>
+	bool Quadtree<T, TCoord>::removeItem(NodeIndex index, T item)
 	{
 		// If the item would not fit within this tree then quit immediately
 		Node& node = m_nodes[index];
@@ -256,8 +273,8 @@ namespace Orion
 		return node.removeItemDirect(item);
 	}
 
-	template <typename T>
-	void Quadtree<T>::clearItems()
+	template <typename T, typename TCoord>
+	void Quadtree<T, TCoord>::clearItems()
 	{
 		// We can just clear everything in all nodes, since it does not matter whether the node is freed or not
 		for (auto & node : m_nodes)
@@ -266,8 +283,8 @@ namespace Orion
 		}
 	}
 
-	template <typename T>
-	void Quadtree<T>::findItems(Vec2<int> minPos, Vec2<int> maxPos, std::vector<T>& outItems) const
+	template <typename T, typename TCoord>
+	void Quadtree<T, TCoord>::findItems(Vec2<TCoord> minPos, Vec2<TCoord> maxPos, std::vector<T>& outItems) const
 	{
 		std::vector<NodeIndex> search({ getRoot() });
 
@@ -296,8 +313,8 @@ namespace Orion
 				{
 					// Add all items which are within the target region
 					const auto& pos = item.getPosition();
-					if (pos.x >= node.getMinBounds().x && pos.x < node.getMaxBounds().x &&
-						pos.y >= node.getMinBounds().y && pos.y < node.getMaxBounds().y)
+					if (pos.x >= minPos.x && pos.x < maxPos.x &&
+						pos.y >= minPos.y && pos.y < maxPos.y)
 					{
 						outItems.push_back(item);
 					}
@@ -306,8 +323,8 @@ namespace Orion
 		}
 	}
 
-	template <typename T>
-	void Quadtree<T>::getItemsRecursive(NodeIndex index, std::vector<T>& items) const
+	template <typename T, typename TCoord>
+	void Quadtree<T, TCoord>::getItemsRecursive(NodeIndex index, std::vector<T>& items) const
 	{
 		const auto& node = m_nodes[index];
 		if (node.hasChildren())
@@ -324,8 +341,8 @@ namespace Orion
 		}
 	}
 
-	template <typename T>
-	typename Quadtree<T>::NodeIndex Quadtree<T>::getLeafNodeContainingPoint(Vec2<int> pos) const
+	template <typename T, typename TCoord>
+	typename Quadtree<T, TCoord>::NodeIndex Quadtree<T, TCoord>::getLeafNodeContainingPoint(Vec2<TCoord> pos) const
 	{
 		auto index = getRoot();
 		const auto& node = m_nodes[index];
@@ -341,34 +358,37 @@ namespace Orion
 		return index;
 	}
 
-	template <typename T>
-	void Quadtree<T>::subdivide(NodeIndex index)
+	template <typename T, typename TCoord>
+	void Quadtree<T, TCoord>::subdivide(NodeIndex index)
 	{
-		auto& node = m_nodes[index];
-		assert(!node.hasChildren());
+		// Do not get a reference to the node here, beofre children are created, since we are about to modify the node collection and the reference may be invalidated
+		assert(!m_nodes[index].hasChildren());
 
 		// Create children
-		node.setChildren({
-			newNode(index, node.getMinBounds(), node.getCentrePoint()),																				// Bottom-left
-			newNode(index, Vec2<int>{node.getMinBounds().x, node.getCentrePoint().y}, Vec2<int>{node.getCentrePoint().x, node.getMaxBounds().y}),	// Top-left
-			newNode(index, node.getCentrePoint(), node.getMaxPoint()),																				// Top-right
-			newNode(index, Vec2<int>{node.getCentrePoint().x, node.getMinBounds().y}, Vec2<int>{node.getMaxPoint().x, node.getCenterPoint().y})		// Bottom-right
-		});
+		const auto pMin = m_nodes[index].getMinBounds(), pCtr = m_nodes[index].getCentrePoint(), pMax = m_nodes[index].getMaxBounds();
+		std::array<NodeIndex, 4> newChildren {
+			newNode(index, pMin, pCtr),														// Bottom-left
+			newNode(index, Vec2<TCoord>(pMin.x, pCtr.y), Vec2<TCoord>(pCtr.x, pMax.y)),		// Top-left
+			newNode(index, pCtr, pMax),														// Top-right
+			newNode(index, Vec2<TCoord>(pCtr.x, pMin.y), Vec2<TCoord>(pMax.x, pCtr.y))		// Bottom-right
+		};
+		m_nodes[index].setChildren(newChildren);
 
 		// Add all item to the relevant child node
+		auto& node = m_nodes[index];
 		const auto& children = node.getChildren();
 		for (auto item : node.getItems())
 		{
-			auto child = node.getChildContainingPoint(item);
-			m_nodes[children[child]].addItemDirect(item);
+			auto child = node.getChildContainingPoint(item.getPosition());
+			m_nodes[children[static_cast<int>(child)]].addItemDirect(item);
 		}
 
 		// Clear all items from the current node, since we are no longer a leaf and have distributed all items
 		node.clearItemsDirect();
 	}
 
-	template <typename T>
-	void Quadtree<T>::itemMoved(T item, Vec2<int> oldPosition)
+	template <typename T, typename TCoord>
+	void Quadtree<T, TCoord>::itemMoved(T item, Vec2<TCoord> oldPosition)
 	{
 		// Find the node that this object previously existed in
 		auto currentNode = getLeafNodeContainingPoint(oldPosition);
@@ -388,130 +408,130 @@ namespace Orion
 	/* Quadtree::Node implementation										 */
 	/* ********************************************************************* */
 
-	template <typename T>
-	Quadtree<T>::Quadtree::Node::Node(NodeIndex id, NodeIndex parent, Vec2<int> minBounds, Vec2<int> maxBounds)
+	template <typename T, typename TCoord>
+	Quadtree<T, TCoord>::Quadtree::Node::Node(NodeIndex id, NodeIndex parent, Vec2<TCoord> minBounds, Vec2<TCoord> maxBounds)
 		:
 		m_id(id),
 		m_parent(parent),
 		m_children({NO_NODE, NO_NODE, NO_NODE, NO_NODE}),
 		m_min_bounds(minBounds),
 		m_max_bounds(maxBounds),
-		m_centre((minBounds + maxBounds) / Vec2<int>{2, 2})
+		m_centre((minBounds + maxBounds) / Vec2<TCoord>{2, 2})
 	{
 	}
 
-	template <typename T>
-	typename Quadtree<T>::NodeIndex Quadtree<T>::Node::getId() const
+	template <typename T, typename TCoord>
+	typename Quadtree<T, TCoord>::NodeIndex Quadtree<T, TCoord>::Node::getId() const
 	{
 		return m_id;
 	}
 
-	template <typename T>
-	typename Quadtree<T>::NodeIndex Quadtree<T>::Node::getParent() const
+	template <typename T, typename TCoord>
+	typename Quadtree<T, TCoord>::NodeIndex Quadtree<T, TCoord>::Node::getParent() const
 	{
 		return m_parent;
 	}
 
-	template <typename T>
-	Vec2<int> Quadtree<T>::Node::getMinBounds() const
+	template <typename T, typename TCoord>
+	Vec2<TCoord> Quadtree<T, TCoord>::Node::getMinBounds() const
 	{
 		return m_min_bounds;
 	}
 
-	template <typename T>
-	Vec2<int> Quadtree<T>::Node::getMaxBounds() const
+	template <typename T, typename TCoord>
+	Vec2<TCoord> Quadtree<T, TCoord>::Node::getMaxBounds() const
 	{
 		return m_max_bounds;
 	}
 
-	template <typename T>
-	Vec2<int> Quadtree<T>::Node::getCentrePoint() const
+	template <typename T, typename TCoord>
+	Vec2<TCoord> Quadtree<T, TCoord>::Node::getCentrePoint() const
 	{
 		return m_centre;
 	}
 	
-	template <typename T>
-	bool Quadtree<T>::Node::canSubdivide() const
+	template <typename T, typename TCoord>
+	bool Quadtree<T, TCoord>::Node::canSubdivide() const
 	{
 		const auto threshold = MIN_NODE_SIZE * 2;
 		return ((m_max_bounds.x - m_min_bounds.x) > threshold) &&
 			   ((m_max_bounds.y - m_min_bounds.y) > threshold);
 	}
 
-	template <typename T>
-	bool Quadtree<T>::Node::isRoot() const
+	template <typename T, typename TCoord>
+	bool Quadtree<T, TCoord>::Node::isRoot() const
 	{
 		return !hasParent();
 	}
 	
-	template <typename T>
-	bool Quadtree<T>::Node::hasParent() const
+	template <typename T, typename TCoord>
+	bool Quadtree<T, TCoord>::Node::hasParent() const
 	{
 		return (m_parent != NO_NODE);
 	}
 
-	template <typename T>
-	bool Quadtree<T>::Node::isBranch() const
+	template <typename T, typename TCoord>
+	bool Quadtree<T, TCoord>::Node::isBranch() const
 	{
 		return hasChildren();
 	}
 	
-	template <typename T>
-	bool Quadtree<T>::Node::isLeaf() const
+	template <typename T, typename TCoord>
+	bool Quadtree<T, TCoord>::Node::isLeaf() const
 	{
 		return !hasChildren();
 	}
 
-	template <typename T>
-	bool Quadtree<T>::Node::hasChildren() const
+	template <typename T, typename TCoord>
+	bool Quadtree<T, TCoord>::Node::hasChildren() const
 	{
 		return (m_children[0] != NO_NODE);
 	}
 
-	template <typename T>
-	const std::array<typename Quadtree<T>::NodeIndex, 4>& Quadtree<T>::Node::getChildren() const
+	template <typename T, typename TCoord>
+	const std::array<typename Quadtree<T, TCoord>::NodeIndex, 4>& Quadtree<T, TCoord>::Node::getChildren() const
 	{
 		return m_children;
 	}
 
-	template <typename T>
-	void Quadtree<T>::Node::setChildren(std::array<NodeIndex, 4> children)
+	template <typename T, typename TCoord>
+	void Quadtree<T, TCoord>::Node::setChildren(std::array<NodeIndex, 4> children)
 	{
 		m_children = children;
 	}
 
-	template <typename T>
-	bool Quadtree<T>::Node::canAcceptItems() const
+	template <typename T, typename TCoord>
+	bool Quadtree<T, TCoord>::Node::canAcceptItems() const
 	{
 		return m_items.size() < MAX_NODE_ITEMS;
 	}
 	
-	template <typename T>
-	void Quadtree<T>::Node::addItemDirect(T item)
+	template <typename T, typename TCoord>
+	void Quadtree<T, TCoord>::Node::addItemDirect(T item)
 	{
 		m_items.push_back(item);
 	}
 
-	template <typename T>
-	const std::vector<T>& Quadtree<T>::Node::getItems() const
+	template <typename T, typename TCoord>
+	const std::vector<T>& Quadtree<T, TCoord>::Node::getItems() const
 	{
 		return m_items;
 	}
 
-	template <typename T>
-	void Quadtree<T>::Node::getItems(std::vector<T>& items) const
+	template <typename T, typename TCoord>
+	void Quadtree<T, TCoord>::Node::getItems(std::vector<T>& items) const
 	{
 		m_items.insert(m_items.end(), items);
 	}
 
-	template <typename T>
-	void Quadtree<T>::Node::setItems(std::vector<T>&& items)
+	template <typename T, typename TCoord>
+	void Quadtree<T, TCoord>::Node::setItems(std::vector<T>&& items)
 	{
 		m_items = items;
 	}
 
-	template <typename T>
-	bool Quadtree<T>::Node::removeItemDirect(T item)
+	template <typename T, typename TCoord>
+	bool Quadtree<T, TCoord>::Node::removeItemDirect(T item)
 	{
 		const auto it = std::find_if(m_items.begin(), m_items.end(), [item](const T& el) { return item == el; });
 		if (it != m_items.end())
@@ -523,21 +543,21 @@ namespace Orion
 		return false;
 	}
 	
-	template <typename T>
-	void Quadtree<T>::Node::clearItemsDirect()
+	template <typename T, typename TCoord>
+	void Quadtree<T, TCoord>::Node::clearItemsDirect()
 	{
 		m_items.clear();
 	}
 
-	template <typename T>
-	bool Quadtree<T>::Node::containsPoint(Vec2<int> point) const
+	template <typename T, typename TCoord>
+	bool Quadtree<T, TCoord>::Node::containsPoint(Vec2<TCoord> point) const
 	{
 		return point.x >= m_min_bounds.x && point.x < m_max_bounds.x&&
 			point.y >= m_min_bounds.y && point.y < m_max_bounds.y;
 	}
 
-	template <typename T>
-	bool Quadtree<T>::Node::containsRegion(Vec2<int> minPoint, Vec2<int> maxPoint) const
+	template <typename T, typename TCoord>
+	bool Quadtree<T, TCoord>::Node::containsRegion(Vec2<TCoord> minPoint, Vec2<TCoord> maxPoint) const
 	{
 		return !(								// Check FAILS if:
 			minPoint.x >= m_max_bounds.x ||		//  1. region left is to the right of our right bound, or
@@ -547,8 +567,8 @@ namespace Orion
 			);
 	}
 
-	template <typename T>
-	typename Quadtree<T>::ChildNode Quadtree<T>::Node::getChildContainingPoint(Vec2<int> point) const
+	template <typename T, typename TCoord>
+	typename Quadtree<T, TCoord>::ChildNode Quadtree<T, TCoord>::Node::getChildContainingPoint(Vec2<TCoord> point) const
 	{
 		if (point.x < m_centre.x)
 		{
