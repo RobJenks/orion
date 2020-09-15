@@ -19,8 +19,6 @@ namespace Orion
 		std::vector<tmps> vec;
 		m_tree.findItems(Vec2<int>{0,0}, Vec2<int>{7,7}, vec);
 
-		
-
 		return int(vec.size());
 	}
 }

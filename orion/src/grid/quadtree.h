@@ -218,24 +218,24 @@ namespace Orion
 	typename Quadtree<T, TCoord>::NodeIndex Quadtree<T, TCoord>::addItemAtPosition(NodeIndex index, T item, Vec2<TCoord> pos)
 	{
 		// If the item will not fit within this tree then quit immediately
-		Node& node = m_nodes[index];
-		if (!node.containsPoint(pos)) return NO_NODE;
+		Node* node = &(m_nodes[index]);
+		if (!node->containsPoint(pos)) return NO_NODE;
 
 		// Locate the leaf node where this item should be added
-		while (node.hasChildren())
+		while (node->hasChildren())
 		{
-			const auto child = node.getChildContainingPoint(pos);
-			index = node.getChildren()[static_cast<int>(child)];
+			const auto child = node->getChildContainingPoint(pos);
+			index = node->getChildren()[static_cast<int>(child)];
 			assert(index != NO_NODE);
 
-			node = m_nodes[index];
+			node = &(m_nodes[index]);
 		}
 
 		// If we are at the item threshold, we may need to try subdividing
-		if (!node.canAcceptItems())
+		if (!node->canAcceptItems())
 		{
 			// Only subdivide if we are still permitted to do so
-			if (node.canSubdivide())
+			if (node->canSubdivide())
 			{
 				// Subdivide and then call this method recursively; should trivially-succeed on new child, unless all items moved into the same child and another subdivision is needed
 				subdivide(index);
@@ -244,7 +244,7 @@ namespace Orion
 		}
 
 		// We are within the threshold, or cannot subdivide any further, so add directly to this node
-		node.addItemDirect(item);
+		node->addItemDirect(item);
 		return index;
 	}
 
@@ -258,19 +258,19 @@ namespace Orion
 	bool Quadtree<T, TCoord>::removeItem(NodeIndex index, T item)
 	{
 		// If the item would not fit within this tree then quit immediately
-		Node& node = m_nodes[index];
-		const auto& pos = node.getPosition();
-		if (!node.containsPoint(pos)) return false;
+		Node *node = &(m_nodes[index]);
+		const auto& pos = item.getPosition();
+		if (!node->containsPoint(pos)) return false;
 
 		// Locate the leaf node where this item should be added
-		while (node.hasChildren())
+		while (node->hasChildren())
 		{
-			index = node.getChildContainingPoint(pos);
-			node = m_nodes[index];
+			index = node->getChildContainingPoint(pos);
+			node = &(m_nodes[index]);
 		}
 
 		// Remove the item if it exists
-		return node.removeItemDirect(item);
+		return node->removeItemDirect(item);
 	}
 
 	template <typename T, typename TCoord>
@@ -292,7 +292,7 @@ namespace Orion
 		{
 			auto index = search.back();
 			search.pop_back();
-			auto& node = m_nodes[index];
+			const auto & node = m_nodes[index];
 
 			// Skip this node immediately if it contains no part of the target region
 			if (!node.containsRegion(minPos, maxPos)) continue;
@@ -345,14 +345,14 @@ namespace Orion
 	typename Quadtree<T, TCoord>::NodeIndex Quadtree<T, TCoord>::getLeafNodeContainingPoint(Vec2<TCoord> pos) const
 	{
 		auto index = getRoot();
-		const auto& node = m_nodes[index];
+		const auto *node = &(m_nodes[index]);
 
-		if (!node.containsPoint(pos)) return NO_NODE;
+		if (!node->containsPoint(pos)) return NO_NODE;
 
-		while (node.hasChildren())
+		while (node->hasChildren())
 		{
-			index = node.getChildContainingPoint(pos);
-			node = m_nodes[index];
+			index = node->getChildContainingPoint(pos);
+			node = &(m_nodes[index]);
 		}
 
 		return index;
