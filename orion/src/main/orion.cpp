@@ -37,10 +37,30 @@ namespace Orion
         2, 3, 6, // 10
         6, 3, 7,
     };
+	struct InstanceData
+	{
+		float transform[16];
+		float colour[4];
+	};
     bgfx::VertexBufferHandle m_vb;
     bgfx::IndexBufferHandle m_ib;
+    bgfx::VertexBufferHandle m_qvb;
+    bgfx::IndexBufferHandle m_qib;
     bgfx::ProgramHandle m_program;
+    bgfx::ProgramHandle m_inst_program;
 
+	static PosColorVertex s_quadVertices[] =
+	{
+		{-1.0f,  1.0f,  1.0f, 0xff000000 },
+		{ 1.0f,  1.0f,  1.0f, 0xff0000ff },
+		{-1.0f, -1.0f,  1.0f, 0xff00ff00 },
+		{ 1.0f, -1.0f,  1.0f, 0xff00ff00 }
+	};
+	static const uint16_t s_quadTriList[] =
+	{
+		2,1,0,//0, 1, 2,
+		3,1,2//2, 1, 3
+	};
 
 
 
@@ -87,13 +107,8 @@ namespace Orion
         imguiCreate();
 
 		// Temporary
-		Vec2<int> a(2, 2), b(8, 8);
-
-		auto c = a + b;
-		auto d = b / a;
-
 		Container tmp;
-		exit(tmp.tmp());
+		//exit(tmp.tmp());
 
         // Temporary
         PosColorVertex::init();
@@ -102,7 +117,11 @@ namespace Orion
             PosColorVertex::ms_layout
         );
         m_ib = bgfx::createIndexBuffer(bgfx::makeRef(s_cubeTriList, sizeof(s_cubeTriList)));
+		m_qvb = bgfx::createVertexBuffer(bgfx::makeRef(s_quadVertices, sizeof(s_quadVertices)), PosColorVertex::ms_layout);
+		m_qib = bgfx::createIndexBuffer(bgfx::makeRef(s_quadTriList, sizeof(s_quadTriList)));
+
         m_program = loadProgram("vs_cubes", "fs_cubes");
+		m_inst_program = loadProgram("vs_instancing", "fs_instancing");
     }
 
     int Orion::shutdown()
@@ -158,10 +177,9 @@ namespace Orion
             bgfx::touch(0);
 
             // Temporary
+			static float timeRot = 0.0f;
+			timeRot += float(bgfx::getStats()->cpuTimeFrame) * (1000.0f / float(bgfx::getStats()->cpuTimerFreq)) * 0.001f;
             {
-                static float timeRot = 0.0f;
-                timeRot += float(bgfx::getStats()->cpuTimeFrame) * (1000.0f / float(bgfx::getStats()->cpuTimerFreq)) * 0.001f;
-
                 uint64_t state = BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_WRITE_Z | BGFX_STATE_DEPTH_TEST_LESS | BGFX_STATE_CULL_CW | BGFX_STATE_MSAA;
 
                 float rot[16], scale[16], world[16];
@@ -176,7 +194,42 @@ namespace Orion
 
                 bgfx::submit(0, m_program);
             }
+			{
+				uint64_t state = BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_WRITE_Z | BGFX_STATE_DEPTH_TEST_LESS | BGFX_STATE_CULL_CW | BGFX_STATE_MSAA;
+				uint32_t numInstances = 4;
+				uint16_t instanceStride = sizeof(InstanceData);
 
+				if (numInstances == bgfx::getAvailInstanceDataBuffer(numInstances, instanceStride))
+				{
+					bgfx::InstanceDataBuffer instances;
+					bgfx::allocInstanceDataBuffer(&instances, numInstances, instanceStride);
+
+					float scale[16], trans[16];
+					bx::mtxScale(scale, 10.0f);
+					InstanceData *data = (InstanceData*)instances.data;
+					for (int i = 0; i < 4; ++i)
+					{
+						float* world = (float*)data->transform;
+						bx::mtxTranslate(trans, -30.0f + (float(i) * 20.0f), 15.0f, 0.0f);
+						bx::mtxMul(world, scale, trans);
+
+						float* color = (float*)data->colour;
+						color[0] = bx::sin(timeRot + float(i) / 11.0f) * 0.5f + 0.5f;
+						color[1] = bx::cos(timeRot + float(i) / 11.0f) * 0.5f + 0.5f;
+						color[2] = bx::sin(timeRot * 3.0f) * 0.5f + 0.5f;
+						color[3] = 1.0f;
+
+						data += 1;
+					}
+
+					bgfx::setVertexBuffer(0, m_qvb);
+					bgfx::setIndexBuffer(m_qib);
+					bgfx::setInstanceDataBuffer(&instances);
+					bgfx::setState(state);
+
+					bgfx::submit(0, m_inst_program);
+				}
+			}
 
             // Debug print FPS
             bgfx::dbgTextClear();
