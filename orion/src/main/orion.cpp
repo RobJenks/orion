@@ -11,6 +11,7 @@ namespace Orion
 {
     // Temporary
     bgfx::VertexLayout PosColorVertex::ms_layout;
+    bgfx::VertexLayout PosTexVertex::ms_layout;
     static PosColorVertex s_cubeVertices[] =
     {
         {-1.0f,  1.0f,  1.0f, 0xff000000 },
@@ -42,24 +43,30 @@ namespace Orion
 		float transform[16];
 		float colour[4];
 	};
+	struct TexInstanceData
+	{
+		float transform[16];
+	};
     bgfx::VertexBufferHandle m_vb;
     bgfx::IndexBufferHandle m_ib;
     bgfx::VertexBufferHandle m_qvb;
     bgfx::IndexBufferHandle m_qib;
+	bgfx::UniformHandle s_texColor;
     bgfx::ProgramHandle m_program;
     bgfx::ProgramHandle m_inst_program;
+	bgfx::TextureHandle m_textureColor;
 
-	static PosColorVertex s_quadVertices[] =
+	static PosTexVertex s_quadVertices[] =
 	{
-		{-1.0f,  1.0f,  1.0f, 0xff000000 },
-		{ 1.0f,  1.0f,  1.0f, 0xff0000ff },
-		{-1.0f, -1.0f,  1.0f, 0xff00ff00 },
-		{ 1.0f, -1.0f,  1.0f, 0xff00ff00 }
+		{-1.0f,  1.0f,  1.0f, 0.0f, 1.0f },
+		{ 1.0f,  1.0f,  1.0f, 1.0f, 1.0f },
+		{-1.0f, -1.0f,  1.0f, 0.0f, 0.0f },
+		{ 1.0f, -1.0f,  1.0f, 1.0f, 0.0f }
 	};
 	static const uint16_t s_quadTriList[] =
 	{
-		2,1,0,//0, 1, 2,
-		3,1,2//2, 1, 3
+		2, 1, 0, // 0, 1, 2,
+		3, 1, 2  // 2, 1, 3
 	};
 
 
@@ -85,13 +92,14 @@ namespace Orion
         m_reset = BGFX_RESET_VSYNC;
 
         bgfx::Init init;
-        init.type = args.m_type;
+		init.type = bgfx::RendererType::Enum::OpenGL; // args.m_type;  // NOTE: D3D currently failing with shader creation error
+		init.debug = RENDERER_DEBUG;
         init.vendorId = args.m_pciId;
         init.resolution.width = m_width;
         init.resolution.height = m_height;
         init.resolution.reset = m_reset;
         bgfx::init(init);
-
+		
         // Enable debug text.
         bgfx::setDebug(m_debug);
 
@@ -112,16 +120,20 @@ namespace Orion
 
         // Temporary
         PosColorVertex::init();
-        m_vb = bgfx::createVertexBuffer(
-            bgfx::makeRef(s_cubeVertices, sizeof(s_cubeVertices)),
-            PosColorVertex::ms_layout
-        );
+		PosTexVertex::init();
+
+        m_vb = bgfx::createVertexBuffer(bgfx::makeRef(s_cubeVertices, sizeof(s_cubeVertices)), PosColorVertex::ms_layout);
         m_ib = bgfx::createIndexBuffer(bgfx::makeRef(s_cubeTriList, sizeof(s_cubeTriList)));
-		m_qvb = bgfx::createVertexBuffer(bgfx::makeRef(s_quadVertices, sizeof(s_quadVertices)), PosColorVertex::ms_layout);
+
+		m_qvb = bgfx::createVertexBuffer(bgfx::makeRef(s_quadVertices, sizeof(s_quadVertices)), PosTexVertex::ms_layout);
 		m_qib = bgfx::createIndexBuffer(bgfx::makeRef(s_quadTriList, sizeof(s_quadTriList)));
 
+		s_texColor = bgfx::createUniform("s_texColor", bgfx::UniformType::Sampler);
+
+		m_textureColor = loadTexture("textures/fieldstone-rgba.dds");
+
         m_program = loadProgram("vs_cubes", "fs_cubes");
-		m_inst_program = loadProgram("vs_instancing", "fs_instancing");
+		m_inst_program = loadProgram("vs_instanced_texture", "fs_instanced_texture");
     }
 
     int Orion::shutdown()
@@ -131,7 +143,13 @@ namespace Orion
 
         // Temporary
         bgfx::destroy(m_vb);
+        bgfx::destroy(m_qvb);
+		bgfx::destroy(m_ib);
+		bgfx::destroy(m_qib);
+		bgfx::destroy(m_textureColor);
+		bgfx::destroy(s_texColor);
         bgfx::destroy(m_program);
+        bgfx::destroy(m_inst_program);
 
         // Shutdown bgfx.
         bgfx::shutdown();
@@ -152,7 +170,7 @@ namespace Orion
                 , uint16_t(m_width)
                 , uint16_t(m_height)
             );
-
+			
             // (UI operations)
 
             imguiEndFrame();
@@ -179,7 +197,7 @@ namespace Orion
             // Temporary
 			static float timeRot = 0.0f;
 			timeRot += float(bgfx::getStats()->cpuTimeFrame) * (1000.0f / float(bgfx::getStats()->cpuTimerFreq)) * 0.001f;
-            {
+           {
                 uint64_t state = BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_WRITE_Z | BGFX_STATE_DEPTH_TEST_LESS | BGFX_STATE_CULL_CW | BGFX_STATE_MSAA;
 
                 float rot[16], scale[16], world[16];
@@ -197,7 +215,7 @@ namespace Orion
 			{
 				uint64_t state = BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_WRITE_Z | BGFX_STATE_DEPTH_TEST_LESS | BGFX_STATE_CULL_CW | BGFX_STATE_MSAA;
 				uint32_t numInstances = 4;
-				uint16_t instanceStride = sizeof(InstanceData);
+				uint16_t instanceStride = sizeof(TexInstanceData);
 
 				if (numInstances == bgfx::getAvailInstanceDataBuffer(numInstances, instanceStride))
 				{
@@ -206,18 +224,12 @@ namespace Orion
 
 					float scale[16], trans[16];
 					bx::mtxScale(scale, 10.0f);
-					InstanceData *data = (InstanceData*)instances.data;
+					TexInstanceData *data = (TexInstanceData*)instances.data;
 					for (int i = 0; i < 4; ++i)
 					{
 						float* world = (float*)data->transform;
 						bx::mtxTranslate(trans, -30.0f + (float(i) * 20.0f), 15.0f, 0.0f);
 						bx::mtxMul(world, scale, trans);
-
-						float* color = (float*)data->colour;
-						color[0] = bx::sin(timeRot + float(i) / 11.0f) * 0.5f + 0.5f;
-						color[1] = bx::cos(timeRot + float(i) / 11.0f) * 0.5f + 0.5f;
-						color[2] = bx::sin(timeRot * 3.0f) * 0.5f + 0.5f;
-						color[3] = 1.0f;
 
 						data += 1;
 					}
@@ -225,6 +237,7 @@ namespace Orion
 					bgfx::setVertexBuffer(0, m_qvb);
 					bgfx::setIndexBuffer(m_qib);
 					bgfx::setInstanceDataBuffer(&instances);
+					bgfx::setTexture(0, s_texColor, m_textureColor);
 					bgfx::setState(state);
 
 					bgfx::submit(0, m_inst_program);

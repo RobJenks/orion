@@ -10,12 +10,6 @@
     <Filter Include="shaders">
       <UniqueIdentifier>{08f2f465-d068-4297-b1c2-968defddd6c0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="shaders\src">
-      <UniqueIdentifier>{50db73ec-77ff-4e53-a5ce-714c39568a6f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="shaders\bin">
-      <UniqueIdentifier>{d210ab8d-aa63-4545-8cce-f15f9e1c00c9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\debug">
       <UniqueIdentifier>{7798303f-3786-4dd7-aee4-7e4ba3bab862}</UniqueIdentifier>
     </Filter>
@@ -33,6 +27,9 @@
     </Filter>
     <Filter Include="src\container">
       <UniqueIdentifier>{2f53e365-03f7-4c40-93dd-98078e36f10c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders\instanced_texture">
+      <UniqueIdentifier>{50db73ec-77ff-4e53-a5ce-714c39568a6f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -107,5 +104,16 @@
     <ClInclude Include="..\..\..\orion\src\grid\quadtree.h">
       <Filter>src\grid</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\orion\shaders\instanced_texture\fs_instanced_texture.sc">
+      <Filter>shaders\instanced_texture</Filter>
+    </None>
+    <None Include="..\..\..\orion\shaders\instanced_texture\varying.def.sc">
+      <Filter>shaders\instanced_texture</Filter>
+    </None>
+    <None Include="..\..\..\orion\shaders\instanced_texture\vs_instanced_texture.sc">
+      <Filter>shaders\instanced_texture</Filter>
+    </None>
   </ItemGroup>
 </Project>

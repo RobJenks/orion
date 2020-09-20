@@ -8,6 +8,11 @@ namespace Orion
     class Orion : public entry::AppI
     {
     public:
+#		ifdef _DEBUG
+		static const bool RENDERER_DEBUG = true;
+#		else
+		static const bool RENDERER_DEBUG = false;
+#		endif
 
         Orion(const char* _name, const char* _description, const char* _url);
 
@@ -46,6 +51,24 @@ namespace Orion
                 .begin()
                 .add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
                 .add(bgfx::Attrib::Color0, 4, bgfx::AttribType::Uint8, true)
+                .end();
+        };
+    };
+	struct PosTexVertex
+    {
+        float m_x;
+        float m_y;
+        float m_z;
+		float m_u;
+		float m_v;
+
+        static bgfx::VertexLayout ms_layout;
+        static void init()
+        {
+            ms_layout
+                .begin()
+                .add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
+                .add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float)
                 .end();
         };
     };

@@ -341,6 +341,11 @@
     <ClInclude Include="..\..\..\orion\src\util\func.h" />
     <ClInclude Include="..\..\..\orion\src\util\types.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\orion\shaders\instanced_texture\fs_instanced_texture.sc" />
+    <None Include="..\..\..\orion\shaders\instanced_texture\varying.def.sc" />
+    <None Include="..\..\..\orion\shaders\instanced_texture\vs_instanced_texture.sc" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
