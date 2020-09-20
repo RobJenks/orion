@@ -139,6 +139,12 @@
       <TargetMachine>MachineX86</TargetMachine>
       <AdditionalOptions>/ignore:4221 /ignore:4199 /DELAYLOAD:"libEGL.dll" /DELAYLOAD:"libGLESv2.dll" %(AdditionalOptions)</AdditionalOptions>
     </Link>
+    <PostBuildEvent>
+      <Command>$(windir)\Sysnative\bash.exe -c "../../../orion/scripts/build-shaders.sh profile::all"</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Compiling shaders</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -180,6 +186,12 @@
       <TargetMachine>MachineX64</TargetMachine>
       <AdditionalOptions>/ignore:4221 /ignore:4199 /DELAYLOAD:"libEGL.dll" /DELAYLOAD:"libGLESv2.dll" %(AdditionalOptions)</AdditionalOptions>
     </Link>
+    <PostBuildEvent>
+      <Command>$(windir)\Sysnative\bash.exe -c "../../../orion/scripts/build-shaders.sh profile::all"</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Compiling shaders</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -225,6 +237,12 @@
       <TargetMachine>MachineX86</TargetMachine>
       <AdditionalOptions>/ignore:4221 /ignore:4199 /DELAYLOAD:"libEGL.dll" /DELAYLOAD:"libGLESv2.dll" %(AdditionalOptions)</AdditionalOptions>
     </Link>
+    <PostBuildEvent>
+      <Command>$(windir)\Sysnative\bash.exe -c "../../../orion/scripts/build-shaders.sh profile::all"</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Compiling shaders</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -269,6 +287,12 @@
       <TargetMachine>MachineX64</TargetMachine>
       <AdditionalOptions>/ignore:4221 /ignore:4199 /DELAYLOAD:"libEGL.dll" /DELAYLOAD:"libGLESv2.dll" %(AdditionalOptions)</AdditionalOptions>
     </Link>
+    <PostBuildEvent>
+      <Command>$(windir)\Sysnative\bash.exe -c "../../../orion/scripts/build-shaders.sh profile::all"</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Compiling shaders</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ProjectReference Include="example-glue.vcxproj">
