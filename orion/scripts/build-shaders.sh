@@ -9,9 +9,6 @@ main() {
 	echo "Starting shader compilation (`pwd`/`basename $0`)"
 	
 	SHADER_DIR="../shaders"
-	
-	ls $SHADER_DIR
-	
 	for f in $SHADER_DIR/*/ ; do
 		if [[ "$f" = "*" ]]; then continue; fi
 		if [[ -d "$f" && ! -L "$f" ]]; then
@@ -32,16 +29,7 @@ main() {
 	done
 }
 
-shader_type() {
-	if [[ $1 = "v" ]]; then echo "vertex";
-	elif [[ $1 = "f" ]]; then echo "fragment";
-	elif [[ $1 = "c" ]]; then echo "compute";
-	else echo "<unknown>";
-	fi
-}
-
 build_if_present() {
-#echo "ARGS- $@"
 	SHADER_PROFILE=$1
 	SHADER_TYPE_CODE=$2
 	SHADER_NAME=$3
