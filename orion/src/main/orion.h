@@ -1,7 +1,7 @@
 #pragma once
 
 #include "common.h"
-#include "../debug/render_stats.h"
+#include "../engine/renderer/core/renderer.h"
 
 namespace Orion
 {
@@ -9,14 +9,14 @@ namespace Orion
     {
     public:
 #		ifdef _DEBUG
-		static const bool RENDERER_DEBUG = true;
+		static const bool RENDERER_RUNTIME_DEBUG_ENABLED = true;
 #		else
-		static const bool RENDERER_DEBUG = false;
+		static const bool RENDERER_RUNTIME_DEBUG_ENABLED = false;
 #		endif
 
-        Orion(const char* _name, const char* _description, const char* _url);
+        Orion(const char* name, const char* description, const char* url);
 
-        void init(int32_t _argc, const char* const* _argv, uint32_t _width, uint32_t _height) override;
+        void init(int32_t argc, const char* const* argv, uint32_t width, uint32_t height) override;
 
         virtual int shutdown() override;
 
@@ -32,7 +32,7 @@ namespace Orion
         uint32_t m_debug;
         uint32_t m_reset;
 
-		RenderStats m_renderStats;
+		Renderer m_renderer;
     };
 
 

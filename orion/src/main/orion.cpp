@@ -71,48 +71,29 @@ namespace Orion
 
 
 
-    Orion::Orion(const char* _name, const char* _description, const char* _url)
+    Orion::Orion(const char* name, const char* description, const char* url)
         :
-        entry::AppI(_name, _description, _url),
+        entry::AppI(name, description, url),
         m_width(0U),
         m_height(0U),
         m_debug(0U),
         m_reset(0U),
-		m_renderStats()
+		m_renderer()
     {
     }
 
-    void Orion::init(int32_t _argc, const char* const* _argv, uint32_t _width, uint32_t _height)
+    void Orion::init(int32_t argc, const char* const* argv, uint32_t width, uint32_t height)
     {
-        Args args(_argc, _argv);
+        Args args(argc, argv);
 
-        m_width = _width;
-        m_height = _height;
-        m_debug = BGFX_DEBUG_TEXT;
-        m_reset = BGFX_RESET_VSYNC;
+		const uint32_t debug = BGFX_DEBUG_TEXT;
+		const uint32_t reset = BGFX_RESET_VSYNC;
 
-        bgfx::Init init;
-		init.type = bgfx::RendererType::Enum::OpenGL; // args.m_type;  // NOTE: D3D currently failing with shader creation error
-		init.debug = RENDERER_DEBUG;
-        init.vendorId = args.m_pciId;
-        init.resolution.width = m_width;
-        init.resolution.height = m_height;
-        init.resolution.reset = m_reset;
-        bgfx::init(init);
-		
-        // Enable debug text.
-        bgfx::setDebug(m_debug);
-
-        // Set view 0 clear state.
-        bgfx::setViewClear(0
-            , BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH
-            , 0x303030ff
-            , 1.0f
-            , 0
-        );
-
-        // Initialise GUI
-        imguiCreate();
+		const auto rendererInit = m_renderer.initialise(width, height, debug, RENDERER_RUNTIME_DEBUG_ENABLED, reset, args);
+		if (ResultCodes::isError(rendererInit))
+		{
+			exit(1);	// *** HANDLE ***
+		}
 
 		// Temporary
 		Container tmp;
