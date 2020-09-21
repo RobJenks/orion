@@ -13,6 +13,9 @@ namespace Orion
 		add(1, UnspecifiedError);
 
 		add(100, CouldNotInitEngineLibrary);
+		add(101, CouldNotLoadShaderProgram);
+		add(102, InvalidEmptyShaderName);
+		add(103, CannotLoadDuplicateShader);
 		
 
 
