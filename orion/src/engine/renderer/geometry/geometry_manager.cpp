@@ -19,8 +19,7 @@ namespace Orion
 
 	ResultCode GeometryManager::initialiseVertexDefinitions()
 	{
-		RETURN_ON_ERROR(VertexDefinitionLoader<VertexDefinitions::PosColorVertex>::load());
-		RETURN_ON_ERROR(VertexDefinitionLoader<VertexDefinitions::PosTexVertex>::load());
+		RETURN_ON_ERROR(VertexDefinitions::initialiseDefinitions());
 
 		return ResultCodes::Success;
 	}

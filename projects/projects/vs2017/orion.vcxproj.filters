@@ -93,6 +93,12 @@
     <ClCompile Include="..\..\..\orion\src\engine\renderer\gui\gui_manager.cpp">
       <Filter>src\engine\renderer\gui</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\orion\src\engine\renderer\geometry\vertex_definitions.cpp">
+      <Filter>src\engine\renderer\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\orion\src\util\log.cpp">
+      <Filter>src\util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\orion\src\main\orion.h">
@@ -157,6 +163,15 @@
     </ClInclude>
     <ClInclude Include="..\..\..\orion\src\engine\renderer\gui\gui_manager.h">
       <Filter>src\engine\renderer\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\orion\src\engine\renderer\geometry\vertex_definition_loader.h">
+      <Filter>src\engine\renderer\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\orion\src\engine\renderer\geometry\vertex_definitions.h">
+      <Filter>src\engine\renderer\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\orion\src\util\log.h">
+      <Filter>src\util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

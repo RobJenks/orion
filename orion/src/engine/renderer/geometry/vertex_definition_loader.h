@@ -14,7 +14,7 @@ namespace Orion
 			T::init();
 			// log("Loaded v def ...")
 
-			return ResultCode::Success;
+			return ResultCodes::Success;
 		}
 
 	};

@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 #include "bgfx_utils.h"
+#include "../../../util/result_code.h"
 
 namespace Orion
 {
@@ -47,6 +48,10 @@ namespace Orion
 					.end();
 			};
 		};
+
+	public:
+
+		static ResultCode initialiseDefinitions();
 
 	};
 }

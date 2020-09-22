@@ -319,6 +319,7 @@
     <ClCompile Include="..\..\..\orion\src\engine\renderer\core\renderer.cpp" />
     <ClCompile Include="..\..\..\orion\src\engine\renderer\debug\render_stats.cpp" />
     <ClCompile Include="..\..\..\orion\src\engine\renderer\geometry\geometry_manager.cpp" />
+    <ClCompile Include="..\..\..\orion\src\engine\renderer\geometry\vertex_definitions.cpp" />
     <ClCompile Include="..\..\..\orion\src\engine\renderer\gui\gui_manager.cpp" />
     <ClCompile Include="..\..\..\orion\src\engine\renderer\shader\shader_manager.cpp" />
     <ClCompile Include="..\..\..\orion\src\engine\renderer\texture\texture_manager.cpp" />
@@ -328,12 +329,15 @@
     <ClCompile Include="..\..\..\orion\src\main\orion.cpp" />
     <ClCompile Include="..\..\..\orion\src\tile\tile.cpp" />
     <ClCompile Include="..\..\..\orion\src\tile\tile_def.cpp" />
+    <ClCompile Include="..\..\..\orion\src\util\log.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\orion\src\container\container.h" />
     <ClInclude Include="..\..\..\orion\src\engine\renderer\core\renderer.h" />
     <ClInclude Include="..\..\..\orion\src\engine\renderer\debug\render_stats.h" />
     <ClInclude Include="..\..\..\orion\src\engine\renderer\geometry\geometry_manager.h" />
+    <ClInclude Include="..\..\..\orion\src\engine\renderer\geometry\vertex_definitions.h" />
+    <ClInclude Include="..\..\..\orion\src\engine\renderer\geometry\vertex_definition_loader.h" />
     <ClInclude Include="..\..\..\orion\src\engine\renderer\gui\gui_manager.h" />
     <ClInclude Include="..\..\..\orion\src\engine\renderer\shader\shader_manager.h" />
     <ClInclude Include="..\..\..\orion\src\engine\renderer\texture\texture_manager.h" />
@@ -349,6 +353,7 @@
     <ClInclude Include="..\..\..\orion\src\tile\tile.h" />
     <ClInclude Include="..\..\..\orion\src\tile\tile_def.h" />
     <ClInclude Include="..\..\..\orion\src\util\func.h" />
+    <ClInclude Include="..\..\..\orion\src\util\log.h" />
     <ClInclude Include="..\..\..\orion\src\util\result_code.h" />
     <ClInclude Include="..\..\..\orion\src\util\types.h" />
   </ItemGroup>

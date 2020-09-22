@@ -4,15 +4,19 @@
 #include "imgui/imgui.h"
 #include "../container/container.h"
 
+
+
+#include "../engine/renderer/geometry/vertex_definitions.h"
+#include "../util/log.h"
+
+
 #include "orion.h"
 
 
 namespace Orion
 {
     // Temporary
-    bgfx::VertexLayout PosColorVertex::ms_layout;
-    bgfx::VertexLayout PosTexVertex::ms_layout;
-    static PosColorVertex s_cubeVertices[] =
+    static VertexDefinitions::PosColorVertex s_cubeVertices[] =
     {
         {-1.0f,  1.0f,  1.0f, 0xff000000 },
         { 1.0f,  1.0f,  1.0f, 0xff0000ff },
@@ -56,7 +60,7 @@ namespace Orion
     bgfx::ProgramHandle m_inst_program;
 	bgfx::TextureHandle m_textureColor;
 
-	static PosTexVertex s_quadVertices[] =
+	static VertexDefinitions::PosTexVertex s_quadVertices[] =
 	{
 		{-1.0f,  1.0f,  1.0f, 0.0f, 1.0f },
 		{ 1.0f,  1.0f,  1.0f, 1.0f, 1.0f },
@@ -84,6 +88,11 @@ namespace Orion
 
     void Orion::init(int32_t argc, const char* const* argv, uint32_t width, uint32_t height)
     {
+		// Temporary
+		Log::initialise("orion.log");
+		LOG_ERROR("This is a test");
+		LOG_INFO("And another test");
+
         Args args(argc, argv);
 
 		const uint32_t debug = BGFX_DEBUG_TEXT;
@@ -99,14 +108,11 @@ namespace Orion
 		Container tmp;
 		//exit(tmp.tmp());
 
-        // Temporary
-        PosColorVertex::init();
-		PosTexVertex::init();
 
-        m_vb = bgfx::createVertexBuffer(bgfx::makeRef(s_cubeVertices, sizeof(s_cubeVertices)), PosColorVertex::ms_layout);
+        m_vb = bgfx::createVertexBuffer(bgfx::makeRef(s_cubeVertices, sizeof(s_cubeVertices)), VertexDefinitions::PosColorVertex::ms_layout);
         m_ib = bgfx::createIndexBuffer(bgfx::makeRef(s_cubeTriList, sizeof(s_cubeTriList)));
 
-		m_qvb = bgfx::createVertexBuffer(bgfx::makeRef(s_quadVertices, sizeof(s_quadVertices)), PosTexVertex::ms_layout);
+		m_qvb = bgfx::createVertexBuffer(bgfx::makeRef(s_quadVertices, sizeof(s_quadVertices)), VertexDefinitions::PosTexVertex::ms_layout);
 		m_qib = bgfx::createIndexBuffer(bgfx::makeRef(s_quadTriList, sizeof(s_quadTriList)));
 
 		s_texColor = bgfx::createUniform("s_texColor", bgfx::UniformType::Sampler);
@@ -228,8 +234,8 @@ namespace Orion
             // Debug print FPS
             bgfx::dbgTextClear();
 
-			m_renderStats.frame(bgfx::getStats());
-            bgfx::dbgTextPrintf(0, 0, 0x0f, "FPS: %.1f", m_renderStats.getFps());
+			//m_renderStats.frame(bgfx::getStats());
+            //bgfx::dbgTextPrintf(0, 0, 0x0f, "FPS: %.1f", m_renderStats.getFps());
 
             // Advance to next frame. Rendering thread will be kicked to
             // process submitted rendering primitives.
