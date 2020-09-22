@@ -1,4 +1,6 @@
 #include "vertex_definition_loader.h"
+#include "../../../util/log.h"
+
 #include "vertex_definitions.h"
 
 #define DEFINE_LAYOUT(DEF) bgfx::VertexLayout VertexDefinitions::DEF::ms_layout

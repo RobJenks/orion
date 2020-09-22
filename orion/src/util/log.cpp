@@ -23,6 +23,7 @@ namespace Orion
 
 		fs::path path(target_file);
 		m_log = std::ofstream(path.c_str(), std::ios::out | std::ios::trunc);
+		m_log_initialised = true;
 
 		return ResultCodes::Success;
 	}

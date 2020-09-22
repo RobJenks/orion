@@ -1,5 +1,6 @@
 #include "renderer.h"
 #include "bgfx_utils.h"
+#include "../../../util/log.h"
 
 namespace Orion
 {
@@ -9,6 +10,8 @@ namespace Orion
 
 	ResultCode Renderer::initialise(uint32_t width, uint32_t height, uint32_t debug, bool runtime_debug, uint32_t reset, Args args)
 	{
+		LOG_INFO("Initialising renderer");
+
 		// Initialise core runtime
 		bgfx::Init init;
 		init.type = bgfx::RendererType::Enum::OpenGL; // args.m_type;  // *** NOTE: D3D currently failing with shader creation error ***
@@ -19,7 +22,7 @@ namespace Orion
 		init.resolution.reset = reset;
 		if (!bgfx::init(init))
 		{
-			return ResultCodes::CouldNotInitEngineLibrary;
+			RETURN_LOG_ERROR("Could not initialise core rendering library", ResultCodes::CouldNotInitEngineLibrary);
 		}
 
 		// Set debug levels
@@ -68,6 +71,8 @@ namespace Orion
 
 	void Renderer::shutdown()
 	{
+		LOG_INFO("Shutting down renderer");
+
 		shutdownShaderManager();
 		shutdownGeometryManger();
 		shutdownTextureManager();

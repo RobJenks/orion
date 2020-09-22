@@ -8,7 +8,7 @@
 namespace Orion
 {
 	// Convenience macro to convert an input stream to a std::string
-#	define T(x) { std::stringstream ss; ss << x; return ss.str(); }
+#	define MAKE_TEXT(x) { std::stringstream ss; ss << x; return ss.str(); }
 
 	class Log
 	{
@@ -23,9 +23,14 @@ namespace Orion
 		static void error(const std::string& str);
 		static void error(const std::string& str, const std::string& file, int line);
 
-#		define LOG_INFO(x)  Log::info(x, __FILE__, __LINE__);
-#		define LOG_WARN(x)  Log::warn(x, __FILE__, __LINE__);
-#		define LOG_ERROR(x) Log::error(x, __FILE__, __LINE__);
+#		define LOG_CAT(x, fn) { std::stringstream ___ss; ___ss << x; fn(___ss.str(), __FILE__, __LINE__); } 
+
+#		define LOG_INFO(x)  LOG_CAT(x, Log::info)
+#		define LOG_WARN(x)  LOG_CAT(x, Log::warn)
+#		define LOG_ERROR(x) LOG_CAT(x, Log::error)
+
+#		define RETURN_LOG_ERROR(x, code) { LOG_CAT(x << " [" << code << ']', Log::error); return code; }
+
 
 	private:
 

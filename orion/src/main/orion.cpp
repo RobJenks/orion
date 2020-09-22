@@ -90,8 +90,6 @@ namespace Orion
     {
 		// Temporary
 		Log::initialise("orion.log");
-		LOG_ERROR("This is a test");
-		LOG_INFO("And another test");
 
         Args args(argc, argv);
 
