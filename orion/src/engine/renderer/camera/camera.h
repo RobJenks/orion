@@ -5,14 +5,10 @@ struct RendererInputState;
 
 namespace Orion
 {
-	class GeometryManager
+	class Camera
 	{
 	public:
-
-		GeometryManager();
-
 		ResultCode initialise();
-		ResultCode initialiseVertexDefinitions();
 
 		ResultCode beginFrame(const RendererInputState& state);
 		ResultCode executeFrame(const RendererInputState& state);

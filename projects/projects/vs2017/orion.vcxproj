@@ -316,6 +316,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\orion\src\container\container.cpp" />
+    <ClCompile Include="..\..\..\orion\src\engine\renderer\camera\camera.cpp" />
     <ClCompile Include="..\..\..\orion\src\engine\renderer\core\renderer.cpp" />
     <ClCompile Include="..\..\..\orion\src\engine\renderer\debug\render_stats.cpp" />
     <ClCompile Include="..\..\..\orion\src\engine\renderer\geometry\geometry_manager.cpp" />
@@ -333,7 +334,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\orion\src\container\container.h" />
+    <ClInclude Include="..\..\..\orion\src\engine\renderer\camera\camera.h" />
     <ClInclude Include="..\..\..\orion\src\engine\renderer\core\renderer.h" />
+    <ClInclude Include="..\..\..\orion\src\engine\renderer\core\renderer_input_state.h" />
     <ClInclude Include="..\..\..\orion\src\engine\renderer\debug\render_stats.h" />
     <ClInclude Include="..\..\..\orion\src\engine\renderer\geometry\geometry_manager.h" />
     <ClInclude Include="..\..\..\orion\src\engine\renderer\geometry\vertex_definitions.h" />

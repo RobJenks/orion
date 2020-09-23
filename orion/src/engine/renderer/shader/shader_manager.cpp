@@ -1,5 +1,6 @@
 #include "bgfx_utils.h"
 #include "../../../util/log.h"
+#include "../core/renderer_input_state.h"
 
 #include "shader_manager.h"
 
@@ -38,7 +39,7 @@ namespace Orion
 			RETURN_LOG_ERROR("Cannot load duplicate shader; program \"" << name << "\" already exists", ResultCodes::CannotLoadDuplicateShader);
 
 		auto fs_str = fs.has_value() ? fs.value().c_str() : NULL;
-		auto program = loadProgram(vs.c_str(), fs_str);
+		const auto program = loadProgram(vs.c_str(), fs_str);
 
 		if (!bgfx::isValid(program))
 		{
@@ -48,6 +49,24 @@ namespace Orion
 		m_shaders[name] = program;
 
 		LOG_INFO("Successfully loaded shader program \"" << name << "\"");
+		return ResultCodes::Success;
+	}
+
+	ResultCode ShaderManager::beginFrame(const RendererInputState& state)
+	{
+		(void)state;
+		return ResultCodes::Success;
+	}
+
+	ResultCode ShaderManager::executeFrame(const RendererInputState& state)
+	{
+		(void)state;
+		return ResultCodes::Success;
+	}
+
+	ResultCode ShaderManager::endFrame(const RendererInputState& state)
+	{
+		(void)state;
 		return ResultCodes::Success;
 	}
 

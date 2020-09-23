@@ -52,6 +52,9 @@
     <Filter Include="src\engine\renderer\gui">
       <UniqueIdentifier>{20b9e80b-57a7-423b-8b7f-90a5b2476010}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\engine\renderer\camera">
+      <UniqueIdentifier>{1d84eaec-59b5-4c46-9346-75e95334ac99}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\orion\src\main\orion.cpp">
@@ -98,6 +101,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\orion\src\util\log.cpp">
       <Filter>src\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\orion\src\engine\renderer\camera\camera.cpp">
+      <Filter>src\engine\renderer\camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -172,6 +178,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\orion\src\util\log.h">
       <Filter>src\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\orion\src\engine\renderer\core\renderer_input_state.h">
+      <Filter>src\engine\renderer\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\orion\src\engine\renderer\camera\camera.h">
+      <Filter>src\engine\renderer\camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

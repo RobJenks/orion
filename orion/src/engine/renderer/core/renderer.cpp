@@ -1,6 +1,7 @@
 #include "renderer.h"
 #include "bgfx_utils.h"
 #include "../../../util/log.h"
+#include "renderer_input_state.h"
 
 namespace Orion
 {
@@ -41,6 +42,7 @@ namespace Orion
 		RETURN_ON_ERROR(initialiseGeometryManger());
 		RETURN_ON_ERROR(initialiseTextureManager());
 		RETURN_ON_ERROR(initialiseGuiManger());
+		RETURN_ON_ERROR(initialiseCamera());
 
 		return ResultCodes::Success;
 	}
@@ -65,7 +67,56 @@ namespace Orion
 		return m_gui.initialise();
 	}
 
+	ResultCode Renderer::initialiseCamera()
+	{
+		return m_camera.initialise();
+	}
 
+	ResultCode Renderer::frame(const RendererInputState& state)
+	{
+		RETURN_ON_ERROR(beginFrame(state));
+		RETURN_ON_ERROR(executeFrame(state));
+		RETURN_ON_ERROR(endFrame(state));
+
+		return ResultCodes::Success;
+	}
+	 
+	ResultCode Renderer::beginFrame(const RendererInputState& state)
+	{
+		RETURN_ON_ERROR(m_shaders.beginFrame(state));
+		RETURN_ON_ERROR(m_geometry.beginFrame(state));
+		RETURN_ON_ERROR(m_textures.beginFrame(state));
+		RETURN_ON_ERROR(m_gui.beginFrame(state));
+		RETURN_ON_ERROR(m_camera.beginFrame(state));
+
+		// Ensures at least one draw call is submitted and backbuffer is therefore cleared between frames
+		bgfx::touch(0);
+
+		return ResultCodes::Success;
+	}
+
+	ResultCode Renderer::executeFrame(const RendererInputState& state)
+	{
+
+		RETURN_ON_ERROR(m_shaders.executeFrame(state));
+		RETURN_ON_ERROR(m_geometry.executeFrame(state));
+		RETURN_ON_ERROR(m_textures.executeFrame(state));
+		RETURN_ON_ERROR(m_gui.executeFrame(state));
+		RETURN_ON_ERROR(m_camera.executeFrame(state));
+
+		return ResultCodes::Success;
+	}
+
+	ResultCode Renderer::endFrame(const RendererInputState& state)
+	{
+		RETURN_ON_ERROR(m_shaders.endFrame(state));
+		RETURN_ON_ERROR(m_geometry.endFrame(state));
+		RETURN_ON_ERROR(m_textures.endFrame(state));
+		RETURN_ON_ERROR(m_gui.endFrame(state));
+		RETURN_ON_ERROR(m_camera.endFrame(state));
+
+		return ResultCodes::Success;
+	}
 
 
 
@@ -77,6 +128,7 @@ namespace Orion
 		shutdownGeometryManger();
 		shutdownTextureManager();
 		shutdownGuiManger();
+		shutdownCamera();
 	}
 
 	void Renderer::shutdownShaderManager()
@@ -97,6 +149,11 @@ namespace Orion
 	void Renderer::shutdownGuiManger()
 	{
 		m_gui.shutdown();
+	}
+
+	void Renderer::shutdownCamera()
+	{
+		m_camera.shutdown();
 	}
 
 }

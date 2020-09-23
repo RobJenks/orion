@@ -2,6 +2,7 @@
 #include "common.h"
 #include "bgfx_utils.h"
 #include "imgui/imgui.h"
+#include "../engine/renderer/core/renderer_input_state.h"
 #include "../container/container.h"
 
 
@@ -117,8 +118,8 @@ namespace Orion
 
 		m_textureColor = loadTexture("textures/fieldstone-rgba.dds");
 
-        m_program = loadProgram("vs_cubes", "fs_cubes");
-		m_inst_program = loadProgram("vs_instanced_texture", "fs_instanced_texture");
+		m_program = m_renderer.getShaderManager().getProgram("colour");
+		m_inst_program = m_renderer.getShaderManager().getProgram("inst_textured");
     }
 
     int Orion::shutdown()
@@ -145,89 +146,18 @@ namespace Orion
     bool Orion::update()
     {
         if (!entry::processEvents(m_width, m_height, m_debug, m_reset, &m_mouseState))
-        {
-            imguiBeginFrame(m_mouseState.m_mx
-                , m_mouseState.m_my
-                , (m_mouseState.m_buttons[entry::MouseButton::Left] ? IMGUI_MBUT_LEFT : 0)
-                | (m_mouseState.m_buttons[entry::MouseButton::Right] ? IMGUI_MBUT_RIGHT : 0)
-                | (m_mouseState.m_buttons[entry::MouseButton::Middle] ? IMGUI_MBUT_MIDDLE : 0)
-                , m_mouseState.m_mz
-                , uint16_t(m_width)
-                , uint16_t(m_height)
-            );
-			
-            // (UI operations)
+		{
+			RendererInputState renderState;
+			renderState.width = m_width;
+			renderState.height = m_height;
+			renderState.frame_ms = getFrameMs();
+			renderState.mouse_state = &m_mouseState;
+			renderState.view_at = { 0.0f, 0.0f, 0.0f };
+			renderState.view_dir = { 0.0f, 0.0f, -35.0f };
 
-            imguiEndFrame();
 
-            // Temporary (probably): Set view and projection matrix for view 0.
-            const bx::Vec3 at = { 0.0f, 0.0f,   0.0f };
-            const bx::Vec3 eye = { 0.0f, 0.0f, -35.0f };
-            {
-                float view[16];
-                bx::mtxLookAt(view, eye, at);
-
-                float proj[16];
-                bx::mtxProj(proj, 60.0f, float(m_width) / float(m_height), 0.1f, 100.0f, bgfx::getCaps()->homogeneousDepth);
-                bgfx::setViewTransform(0, view, proj);
-				
-                // Set view 0 default viewport.
-                bgfx::setViewRect(0, 0, 0, uint16_t(m_width), uint16_t(m_height));
-            }
-
-            // This dummy draw call is here to make sure that view 0 is cleared
-            // if no other draw calls are submitted to view 0.
-            bgfx::touch(0);
-
-            // Temporary
-			static float timeRot = 0.0f;
-			timeRot += float(bgfx::getStats()->cpuTimeFrame) * (1000.0f / float(bgfx::getStats()->cpuTimerFreq)) * 0.001f;
-           {
-                uint64_t state = BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_WRITE_Z | BGFX_STATE_DEPTH_TEST_LESS | BGFX_STATE_CULL_CW | BGFX_STATE_MSAA;
-
-                float rot[16], scale[16], world[16];
-                bx::mtxRotateXY(rot, 0.42f + timeRot, 0.74f + timeRot);
-                bx::mtxScale(scale, 8.0f);
-                bx::mtxMul(world, scale, rot);
-                bgfx::setTransform(world);
-
-                bgfx::setVertexBuffer(0, m_vb);
-                bgfx::setIndexBuffer(m_ib);
-                bgfx::setState(state);
-
-                bgfx::submit(0, m_program);
-            }
-			{
-				uint64_t state = BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_WRITE_Z | BGFX_STATE_DEPTH_TEST_LESS | BGFX_STATE_CULL_CW | BGFX_STATE_MSAA;
-				uint32_t numInstances = 4;
-				uint16_t instanceStride = sizeof(TexInstanceData);
-
-				if (numInstances == bgfx::getAvailInstanceDataBuffer(numInstances, instanceStride))
-				{
-					bgfx::InstanceDataBuffer instances;
-					bgfx::allocInstanceDataBuffer(&instances, numInstances, instanceStride);
-
-					float scale[16], trans[16];
-					bx::mtxScale(scale, 10.0f);
-					TexInstanceData *data = (TexInstanceData*)instances.data;
-					for (int i = 0; i < 4; ++i)
-					{
-						float* world = (float*)data->transform;
-						bx::mtxTranslate(trans, -30.0f + (float(i) * 20.0f), 15.0f, 0.0f);
-						bx::mtxMul(world, scale, trans);
-
-						data += 1;
-					}
-
-					bgfx::setVertexBuffer(0, m_qvb);
-					bgfx::setIndexBuffer(m_qib);
-					bgfx::setInstanceDataBuffer(&instances);
-					bgfx::setTexture(0, s_texColor, m_textureColor);
-					bgfx::setState(state);
-
-					bgfx::submit(0, m_inst_program);
-				}
-			}
+			m_renderer.frame(renderState);
+			_renderTemporaryScene();
 
             // Debug print FPS
             bgfx::dbgTextClear();
@@ -244,6 +174,65 @@ namespace Orion
 
         return false;
     }
+
+
+	float Orion::getFrameMs() const
+	{
+		return float(bgfx::getStats()->cpuTimeFrame) * (1000.0f / float(bgfx::getStats()->cpuTimerFreq)) * 0.001f;
+	}
+
+	void Orion::_renderTemporaryScene() const
+	{
+		// Temporary
+		static float timeRot = 0.0f;
+		timeRot += float(bgfx::getStats()->cpuTimeFrame) * (1000.0f / float(bgfx::getStats()->cpuTimerFreq)) * 0.001f;
+		{
+			uint64_t state = BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_WRITE_Z | BGFX_STATE_DEPTH_TEST_LESS | BGFX_STATE_CULL_CW | BGFX_STATE_MSAA;
+
+			float rot[16], scale[16], world[16];
+			bx::mtxRotateXY(rot, 0.42f + timeRot, 0.74f + timeRot);
+			bx::mtxScale(scale, 8.0f);
+			bx::mtxMul(world, scale, rot);
+			bgfx::setTransform(world);
+
+			bgfx::setVertexBuffer(0, m_vb);
+			bgfx::setIndexBuffer(m_ib);
+			bgfx::setState(state);
+
+			bgfx::submit(0, m_program);
+		}
+		{
+			uint64_t state = BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_WRITE_Z | BGFX_STATE_DEPTH_TEST_LESS | BGFX_STATE_CULL_CW | BGFX_STATE_MSAA;
+			uint32_t numInstances = 4;
+			uint16_t instanceStride = sizeof(TexInstanceData);
+
+			if (numInstances == bgfx::getAvailInstanceDataBuffer(numInstances, instanceStride))
+			{
+				bgfx::InstanceDataBuffer instances;
+				bgfx::allocInstanceDataBuffer(&instances, numInstances, instanceStride);
+
+				float scale[16], trans[16];
+				bx::mtxScale(scale, 10.0f);
+				TexInstanceData* data = (TexInstanceData*)instances.data;
+				for (int i = 0; i < 4; ++i)
+				{
+					float* world = (float*)data->transform;
+					bx::mtxTranslate(trans, -30.0f + (float(i) * 20.0f), 15.0f, 0.0f);
+					bx::mtxMul(world, scale, trans);
+
+					data += 1;
+				}
+
+				bgfx::setVertexBuffer(0, m_qvb);
+				bgfx::setIndexBuffer(m_qib);
+				bgfx::setInstanceDataBuffer(&instances);
+				bgfx::setTexture(0, s_texColor, m_textureColor);
+				bgfx::setState(state);
+
+				bgfx::submit(0, m_inst_program);
+			}
+		}
+	}
 }
 
 ENTRY_IMPLEMENT_MAIN(

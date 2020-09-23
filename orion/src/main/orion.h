@@ -22,6 +22,11 @@ namespace Orion
 
         bool update() override;
 
+	private:
+
+		float getFrameMs() const;
+
+		void _renderTemporaryScene() const;
 
     private:
 
