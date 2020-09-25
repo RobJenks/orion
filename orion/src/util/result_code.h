@@ -16,6 +16,9 @@ namespace Orion
 		add(101, CouldNotLoadShaderProgram);
 		add(102, InvalidEmptyShaderName);
 		add(103, CannotLoadDuplicateShader);
+		add(104, CannotLoadMeshWithInvalidEmptyName);
+		add(105, CannotLoadMeshWithInvalidName);
+		add(106, CannotStoreDuplicateMesh);
 		
 
 

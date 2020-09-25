@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "bgfx_utils.h"
 #include "../../../util/log.h"
 #include "../core/renderer_input_state.h"
@@ -73,5 +74,15 @@ namespace Orion
 	void ShaderManager::shutdown()
 	{
 		LOG_INFO("Shutting down shader manager");
+
+		shutdownShaderPrograms();
+	}
+
+	void ShaderManager::shutdownShaderPrograms()
+	{
+		LOG_INFO("Releasing all shader programs");
+
+		std::for_each(m_shaders.begin(), m_shaders.end(), [](auto& shader) { bgfx::destroy(shader.second); });
+		m_shaders.clear();
 	}
 }

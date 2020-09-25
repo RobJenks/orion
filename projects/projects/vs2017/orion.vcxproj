@@ -319,6 +319,7 @@
     <ClCompile Include="..\..\..\orion\src\engine\renderer\camera\camera.cpp" />
     <ClCompile Include="..\..\..\orion\src\engine\renderer\core\renderer.cpp" />
     <ClCompile Include="..\..\..\orion\src\engine\renderer\debug\render_stats.cpp" />
+    <ClCompile Include="..\..\..\orion\src\engine\renderer\geometry\basic_mesh.cpp" />
     <ClCompile Include="..\..\..\orion\src\engine\renderer\geometry\geometry_manager.cpp" />
     <ClCompile Include="..\..\..\orion\src\engine\renderer\geometry\vertex_definitions.cpp" />
     <ClCompile Include="..\..\..\orion\src\engine\renderer\gui\gui_manager.cpp" />
@@ -338,6 +339,7 @@
     <ClInclude Include="..\..\..\orion\src\engine\renderer\core\renderer.h" />
     <ClInclude Include="..\..\..\orion\src\engine\renderer\core\renderer_input_state.h" />
     <ClInclude Include="..\..\..\orion\src\engine\renderer\debug\render_stats.h" />
+    <ClInclude Include="..\..\..\orion\src\engine\renderer\geometry\basic_mesh.h" />
     <ClInclude Include="..\..\..\orion\src\engine\renderer\geometry\geometry_manager.h" />
     <ClInclude Include="..\..\..\orion\src\engine\renderer\geometry\vertex_definitions.h" />
     <ClInclude Include="..\..\..\orion\src\engine\renderer\geometry\vertex_definition_loader.h" />

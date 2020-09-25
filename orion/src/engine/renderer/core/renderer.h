@@ -30,6 +30,12 @@ namespace Orion
 		inline GuiManager& getGuiManager() { return m_gui; }
 		inline Camera& getCamera() { return m_camera; }
 
+		const inline ShaderManager& getShaderManager() const { return m_shaders; }
+		const inline GeometryManager& getGeometryManager() const { return m_geometry; }
+		const inline TextureManager& getTextureManager() const { return m_textures; }
+		const inline GuiManager& getGuiManager() const { return m_gui; }
+		const inline Camera& getCamera() const { return m_camera; }
+
 
 		void shutdown();
 

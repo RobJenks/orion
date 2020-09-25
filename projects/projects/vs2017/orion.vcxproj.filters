@@ -105,6 +105,9 @@
     <ClCompile Include="..\..\..\orion\src\engine\renderer\camera\camera.cpp">
       <Filter>src\engine\renderer\camera</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\orion\src\engine\renderer\geometry\basic_mesh.cpp">
+      <Filter>src\engine\renderer\geometry</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\orion\src\main\orion.h">
@@ -184,6 +187,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\orion\src\engine\renderer\camera\camera.h">
       <Filter>src\engine\renderer\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\orion\src\engine\renderer\geometry\basic_mesh.h">
+      <Filter>src\engine\renderer\geometry</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

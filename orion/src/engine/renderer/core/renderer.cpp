@@ -129,6 +129,9 @@ namespace Orion
 		shutdownTextureManager();
 		shutdownGuiManger();
 		shutdownCamera();
+
+		LOG_INFO("Shutting down core render library");
+		bgfx::shutdown();
 	}
 
 	void Renderer::shutdownShaderManager()
