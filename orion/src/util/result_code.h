@@ -21,6 +21,9 @@ namespace Orion
 		add(106, CannotStoreDuplicateMesh);
 		add(107, CannotCreateDuplicateUniform);
 		add(108, FailedToCreateUniform);
+		add(109, FailedToLoadTextureResource);
+		add(110, FailedToCreateMesh);
+		add(111, CannotLoadDuplicateTexture);
 		
 
 

@@ -16,6 +16,7 @@ namespace Orion
 		BasicMesh();
 		BasicMesh(bgfx::VertexBufferHandle vb, bgfx::IndexBufferHandle ib);
 
+		bool isValid();
 		void destroy();
 
 	};

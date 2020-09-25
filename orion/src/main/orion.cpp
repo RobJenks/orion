@@ -6,6 +6,7 @@
 #include "../container/container.h"
 #include "../engine/renderer/geometry/geometry_manager.h"
 #include "../engine/renderer/shader/shader_manager.h"
+#include "../engine/renderer/texture/texture_manager.h"
 #include "../util/log.h"
 
 
@@ -24,9 +25,6 @@ namespace Orion
 	{
 		float transform[16];
 	};
-	bgfx::TextureHandle m_textureColor;
-
-	
 
 
 
@@ -60,18 +58,10 @@ namespace Orion
 
 		// Temporary
 		Container tmp;
-		//exit(tmp.tmp());
-
-		m_textureColor = loadTexture("textures/fieldstone-rgba.dds");
-
-
     }
 
     int Orion::shutdown()
     {
-		// Temporary
-		bgfx::destroy(m_textureColor);
-
 		// Shutdown primary components
 		m_renderer.shutdown();
 
@@ -163,7 +153,9 @@ namespace Orion
 				bgfx::setVertexBuffer(0, mesh.vertex_buffer);
 				bgfx::setIndexBuffer(mesh.index_buffer);
 				bgfx::setInstanceDataBuffer(&instances);
-				bgfx::setTexture(0, m_renderer.getShaderManager().getUniform("s_texColor"), m_textureColor);
+				bgfx::setTexture(0,
+					m_renderer.getShaderManager().getUniform("s_texColor"),
+					m_renderer.getTextureManager().getTexture("fieldstone"));
 				bgfx::setState(state);
 
 				bgfx::submit(0, m_renderer.getShaderManager().getProgram("inst_textured"));

@@ -15,6 +15,12 @@ namespace Orion
 	{
 	}
 
+	bool BasicMesh::isValid()
+	{
+		return bgfx::isValid(vertex_buffer)
+			&& bgfx::isValid(index_buffer);
+	}
+
 	void BasicMesh::destroy()
 	{
 		bgfx::destroy(vertex_buffer);

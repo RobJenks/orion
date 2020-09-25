@@ -136,11 +136,15 @@ namespace Orion
 	}
 
 	ResultCode GeometryManager::storeMesh(const std::string& name, BasicMesh&& mesh)
-	{
+    {
+        if (!mesh.isValid())
+        {
+            RETURN_LOG_ERROR("Failed to create valid mesh data for \"" << name << "\"", ResultCodes::FailedToCreateMesh);
+        }
+    
 		if (m_meshes.find(name) != m_meshes.end())
 		{
-			LOG_WARN("Cannot store mesh data; mesh already exists with name \"" << name << "\"");
-			return ResultCodes::CannotStoreDuplicateMesh;
+			RETURN_LOG_ERROR("Cannot store mesh data; mesh already exists with name \"" << name << "\"", ResultCodes::CannotStoreDuplicateMesh);
 		}
 
 		m_meshes[name] = mesh;
