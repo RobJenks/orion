@@ -19,6 +19,8 @@ namespace Orion
 		add(104, CannotLoadMeshWithInvalidEmptyName);
 		add(105, CannotLoadMeshWithInvalidName);
 		add(106, CannotStoreDuplicateMesh);
+		add(107, CannotCreateDuplicateUniform);
+		add(108, FailedToCreateUniform);
 		
 
 

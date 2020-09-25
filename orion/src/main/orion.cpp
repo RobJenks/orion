@@ -24,7 +24,6 @@ namespace Orion
 	{
 		float transform[16];
 	};
-	bgfx::UniformHandle s_texColor;
 	bgfx::TextureHandle m_textureColor;
 
 	
@@ -55,15 +54,13 @@ namespace Orion
 		const auto rendererInit = m_renderer.initialise(width, height, debug, RENDERER_RUNTIME_DEBUG_ENABLED, reset, args);
 		if (ResultCodes::isError(rendererInit))
 		{
-			exit(1);	// *** HANDLE ***
+			LOG_ERROR("Fatal error initialising renderer (" << rendererInit << "), cannot continue");
+			exit(1);
 		}
 
 		// Temporary
 		Container tmp;
 		//exit(tmp.tmp());
-
-
-        s_texColor = bgfx::createUniform("s_texColor", bgfx::UniformType::Sampler);
 
 		m_textureColor = loadTexture("textures/fieldstone-rgba.dds");
 
@@ -74,7 +71,6 @@ namespace Orion
     {
 		// Temporary
 		bgfx::destroy(m_textureColor);
-		bgfx::destroy(s_texColor);
 
 		// Shutdown primary components
 		m_renderer.shutdown();
@@ -167,7 +163,7 @@ namespace Orion
 				bgfx::setVertexBuffer(0, mesh.vertex_buffer);
 				bgfx::setIndexBuffer(mesh.index_buffer);
 				bgfx::setInstanceDataBuffer(&instances);
-				bgfx::setTexture(0, s_texColor, m_textureColor);
+				bgfx::setTexture(0, m_renderer.getShaderManager().getUniform("s_texColor"), m_textureColor);
 				bgfx::setState(state);
 
 				bgfx::submit(0, m_renderer.getShaderManager().getProgram("inst_textured"));
