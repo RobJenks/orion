@@ -32,8 +32,8 @@ namespace Orion
 }
 
 // Hash function for immutable render config structures
-namespace std {
-
+namespace std
+{
 	template <>
 	struct hash<Orion::RenderConfig>
 	{
