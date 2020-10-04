@@ -111,9 +111,6 @@
     <ClCompile Include="..\..\..\orion\src\engine\renderer\geometry\basic_mesh.cpp">
       <Filter>src\engine\renderer\geometry</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\orion\src\engine\renderer\queue\render_queue.cpp">
-      <Filter>src\engine\renderer\queue</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\orion\src\engine\renderer\queue\render_config.cpp">
       <Filter>src\engine\renderer\queue</Filter>
     </ClCompile>
@@ -204,6 +201,9 @@
       <Filter>src\engine\renderer\queue</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\orion\src\engine\renderer\queue\render_config.h">
+      <Filter>src\engine\renderer\queue</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\orion\src\engine\renderer\queue\render_slot.h">
       <Filter>src\engine\renderer\queue</Filter>
     </ClInclude>
   </ItemGroup>
