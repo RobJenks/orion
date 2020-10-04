@@ -10,9 +10,6 @@
     <Filter Include="shaders">
       <UniqueIdentifier>{08f2f465-d068-4297-b1c2-968defddd6c0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\debug">
-      <UniqueIdentifier>{7798303f-3786-4dd7-aee4-7e4ba3bab862}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\grid">
       <UniqueIdentifier>{bb9ebd32-60c7-4f4f-aeb2-df9c6e85a4a1}</UniqueIdentifier>
     </Filter>
@@ -31,13 +28,37 @@
     <Filter Include="shaders\instanced_texture">
       <UniqueIdentifier>{50db73ec-77ff-4e53-a5ce-714c39568a6f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\engine">
+      <UniqueIdentifier>{378facd1-d91f-4396-a9d2-65a674d9f90a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\engine\renderer">
+      <UniqueIdentifier>{4d7a4b04-1185-445f-99e9-21c4468ac198}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\engine\renderer\core">
+      <UniqueIdentifier>{0e3d1417-e24f-40da-9d16-aeb84a56eda6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\engine\renderer\debug">
+      <UniqueIdentifier>{7798303f-3786-4dd7-aee4-7e4ba3bab862}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\engine\renderer\geometry">
+      <UniqueIdentifier>{4da5ae5a-0018-4a25-8d17-4f52c053f0f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\engine\renderer\texture">
+      <UniqueIdentifier>{99b85a4f-fc9b-4bd3-8275-4fc69c05db34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\engine\renderer\shader">
+      <UniqueIdentifier>{e9f99ed3-b0a5-4fa3-b302-9f9e0c72fc66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\engine\renderer\gui">
+      <UniqueIdentifier>{20b9e80b-57a7-423b-8b7f-90a5b2476010}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\engine\renderer\camera">
+      <UniqueIdentifier>{1d84eaec-59b5-4c46-9346-75e95334ac99}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\orion\src\main\orion.cpp">
       <Filter>src\main</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\orion\src\debug\render_stats.cpp">
-      <Filter>src\debug</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\orion\src\grid\grid.cpp">
       <Filter>src\grid</Filter>
@@ -57,13 +78,40 @@
     <ClCompile Include="..\..\..\orion\src\container\container.cpp">
       <Filter>src\container</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\orion\src\engine\renderer\core\renderer.cpp">
+      <Filter>src\engine\renderer\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\orion\src\engine\renderer\debug\render_stats.cpp">
+      <Filter>src\engine\renderer\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\orion\src\engine\renderer\geometry\geometry_manager.cpp">
+      <Filter>src\engine\renderer\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\orion\src\engine\renderer\shader\shader_manager.cpp">
+      <Filter>src\engine\renderer\shader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\orion\src\engine\renderer\texture\texture_manager.cpp">
+      <Filter>src\engine\renderer\texture</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\orion\src\engine\renderer\gui\gui_manager.cpp">
+      <Filter>src\engine\renderer\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\orion\src\engine\renderer\geometry\vertex_definitions.cpp">
+      <Filter>src\engine\renderer\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\orion\src\util\log.cpp">
+      <Filter>src\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\orion\src\engine\renderer\camera\camera.cpp">
+      <Filter>src\engine\renderer\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\orion\src\engine\renderer\geometry\basic_mesh.cpp">
+      <Filter>src\engine\renderer\geometry</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\orion\src\main\orion.h">
       <Filter>src\main</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\orion\src\debug\render_stats.h">
-      <Filter>src\debug</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\orion\src\grid\grid.h">
       <Filter>src\grid</Filter>
@@ -103,6 +151,45 @@
     </ClInclude>
     <ClInclude Include="..\..\..\orion\src\grid\quadtree.h">
       <Filter>src\grid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\orion\src\engine\renderer\core\renderer.h">
+      <Filter>src\engine\renderer\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\orion\src\engine\renderer\debug\render_stats.h">
+      <Filter>src\engine\renderer\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\orion\src\engine\renderer\geometry\geometry_manager.h">
+      <Filter>src\engine\renderer\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\orion\src\engine\renderer\shader\shader_manager.h">
+      <Filter>src\engine\renderer\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\orion\src\engine\renderer\texture\texture_manager.h">
+      <Filter>src\engine\renderer\texture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\orion\src\util\result_code.h">
+      <Filter>src\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\orion\src\engine\renderer\gui\gui_manager.h">
+      <Filter>src\engine\renderer\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\orion\src\engine\renderer\geometry\vertex_definition_loader.h">
+      <Filter>src\engine\renderer\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\orion\src\engine\renderer\geometry\vertex_definitions.h">
+      <Filter>src\engine\renderer\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\orion\src\util\log.h">
+      <Filter>src\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\orion\src\engine\renderer\core\renderer_input_state.h">
+      <Filter>src\engine\renderer\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\orion\src\engine\renderer\camera\camera.h">
+      <Filter>src\engine\renderer\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\orion\src\engine\renderer\geometry\basic_mesh.h">
+      <Filter>src\engine\renderer\geometry</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

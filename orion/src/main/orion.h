@@ -1,7 +1,7 @@
 #pragma once
 
 #include "common.h"
-#include "../debug/render_stats.h"
+#include "../engine/renderer/core/renderer.h"
 
 namespace Orion
 {
@@ -9,19 +9,24 @@ namespace Orion
     {
     public:
 #		ifdef _DEBUG
-		static const bool RENDERER_DEBUG = true;
+		static const bool RENDERER_RUNTIME_DEBUG_ENABLED = true;
 #		else
-		static const bool RENDERER_DEBUG = false;
+		static const bool RENDERER_RUNTIME_DEBUG_ENABLED = false;
 #		endif
 
-        Orion(const char* _name, const char* _description, const char* _url);
+        Orion(const char* name, const char* description, const char* url);
 
-        void init(int32_t _argc, const char* const* _argv, uint32_t _width, uint32_t _height) override;
+        void init(int32_t argc, const char* const* argv, uint32_t width, uint32_t height) override;
 
         virtual int shutdown() override;
 
         bool update() override;
 
+	private:
+
+		float getFrameMs() const;
+
+		void _renderTemporaryScene() const;
 
     private:
 
@@ -32,44 +37,6 @@ namespace Orion
         uint32_t m_debug;
         uint32_t m_reset;
 
-		RenderStats m_renderStats;
-    };
-
-
-    // Temporary
-    struct PosColorVertex
-    {
-        float m_x;
-        float m_y;
-        float m_z;
-        uint32_t m_abgr;
-
-        static bgfx::VertexLayout ms_layout;
-        static void init()
-        {
-            ms_layout
-                .begin()
-                .add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
-                .add(bgfx::Attrib::Color0, 4, bgfx::AttribType::Uint8, true)
-                .end();
-        };
-    };
-	struct PosTexVertex
-    {
-        float m_x;
-        float m_y;
-        float m_z;
-		float m_u;
-		float m_v;
-
-        static bgfx::VertexLayout ms_layout;
-        static void init()
-        {
-            ms_layout
-                .begin()
-                .add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
-                .add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float)
-                .end();
-        };
+		Renderer m_renderer;
     };
 };
