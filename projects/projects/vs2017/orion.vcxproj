@@ -324,8 +324,6 @@
     <ClCompile Include="..\..\..\orion\src\engine\renderer\geometry\vertex_definitions.cpp" />
     <ClCompile Include="..\..\..\orion\src\engine\renderer\gui\gui_manager.cpp" />
     <ClCompile Include="..\..\..\orion\src\engine\renderer\queue\render_config.cpp" />
-    <ClCompile Include="..\..\..\orion\src\engine\renderer\queue\render_queue.cpp" />
-    <ClCompile Include="..\..\..\orion\src\engine\renderer\queue\render_slot.cpp" />
     <ClCompile Include="..\..\..\orion\src\engine\renderer\shader\shader_manager.cpp" />
     <ClCompile Include="..\..\..\orion\src\engine\renderer\texture\texture_manager.cpp" />
     <ClCompile Include="..\..\..\orion\src\grid\direction.cpp" />
