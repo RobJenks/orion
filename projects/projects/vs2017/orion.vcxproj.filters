@@ -55,6 +55,9 @@
     <Filter Include="src\engine\renderer\camera">
       <UniqueIdentifier>{1d84eaec-59b5-4c46-9346-75e95334ac99}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\engine\renderer\queue">
+      <UniqueIdentifier>{29950468-72b0-4785-9977-3b5c6187a4fe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\orion\src\main\orion.cpp">
@@ -107,6 +110,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\orion\src\engine\renderer\geometry\basic_mesh.cpp">
       <Filter>src\engine\renderer\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\orion\src\engine\renderer\queue\render_queue.cpp">
+      <Filter>src\engine\renderer\queue</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\orion\src\engine\renderer\queue\render_config.cpp">
+      <Filter>src\engine\renderer\queue</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -190,6 +199,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\orion\src\engine\renderer\geometry\basic_mesh.h">
       <Filter>src\engine\renderer\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\orion\src\engine\renderer\queue\render_queue.h">
+      <Filter>src\engine\renderer\queue</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\orion\src\engine\renderer\queue\render_config.h">
+      <Filter>src\engine\renderer\queue</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

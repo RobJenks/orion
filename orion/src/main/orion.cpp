@@ -9,9 +9,7 @@
 #include "../engine/renderer/texture/texture_manager.h"
 #include "../util/log.h"
 
-
 #include "orion.h"
-
 
 namespace Orion
 {
