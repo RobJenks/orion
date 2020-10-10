@@ -6,6 +6,15 @@
 namespace Orion
 {
 	Renderer::Renderer()
+		:
+		m_shaders(),
+		m_geometry(),
+		m_textures(),
+		m_gui(),
+		m_camera(),
+		m_renderStats(),
+
+		rq_textured("Standard textured")
 	{	
 	}
 
@@ -43,6 +52,7 @@ namespace Orion
 		RETURN_ON_ERROR(initialiseTextureManager());
 		RETURN_ON_ERROR(initialiseGuiManger());
 		RETURN_ON_ERROR(initialiseCamera());
+		RETURN_ON_ERROR(initialiseRenderQueues());
 
 		return ResultCodes::Success;
 	}
@@ -70,6 +80,16 @@ namespace Orion
 	ResultCode Renderer::initialiseCamera()
 	{
 		return m_camera.initialise();
+	}
+
+	ResultCode Renderer::initialiseRenderQueues()
+	{
+		ResultCode result = ResultCodes::Success;
+
+		// Initialise each render queue in turn
+		result = ResultCodes::aggregate(result, rq_textured.initialise());
+
+		return result;
 	}
 
 	ResultCode Renderer::frame(const RendererInputState& state)
@@ -129,6 +149,7 @@ namespace Orion
 		shutdownTextureManager();
 		shutdownGuiManger();
 		shutdownCamera();
+		shutdownRenderQueues();
 
 		LOG_INFO("Shutting down core render library");
 		bgfx::shutdown();
@@ -157,6 +178,12 @@ namespace Orion
 	void Renderer::shutdownCamera()
 	{
 		m_camera.shutdown();
+	}
+
+	void Renderer::shutdownRenderQueues()
+	{
+		// Shutdown each render queue in turn
+		rq_textured.shutdown();
 	}
 
 }
