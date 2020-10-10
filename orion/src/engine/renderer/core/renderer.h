@@ -1,10 +1,13 @@
 #pragma once
 
 #include <stdint.h>
+#include <array>
 #include "../../../util/result_code.h"
 #include "../../../math/vec2.h"
 #include "../shader/shader_manager.h"
 #include "../geometry/geometry_manager.h"
+#include "../geometry/vertex_definitions.h"
+#include "../queue/render_queue.h"
 #include "../texture/texture_manager.h"
 #include "../gui/gui_manager.h"
 #include "../camera/camera.h"
@@ -36,6 +39,8 @@ namespace Orion
 		const inline GuiManager& getGuiManager() const { return m_gui; }
 		const inline Camera& getCamera() const { return m_camera; }
 
+		// Render queues, per geometry submission type
+		const inline RenderQueue<VertexDefinitions::PosTexVertex>& rqTextured() { return rq_textured; }
 
 		void shutdown();
 
@@ -48,6 +53,7 @@ namespace Orion
 		ResultCode initialiseTextureManager();
 		ResultCode initialiseGuiManger();
 		ResultCode initialiseCamera();
+		ResultCode initialiseRenderQueues();
 
 		ResultCode beginFrame(const RendererInputState& state);
 		ResultCode executeFrame(const RendererInputState& state);
@@ -58,6 +64,7 @@ namespace Orion
 		void shutdownTextureManager();
 		void shutdownGuiManger();
 		void shutdownCamera();
+		void shutdownRenderQueues();
 
 
 	private:
@@ -68,6 +75,10 @@ namespace Orion
 		Camera m_camera;
 
 		RenderStats m_renderStats;
+
+	private:
+		// Render queues, per geometry submission type
+		RenderQueue<VertexDefinitions::PosTexVertex> rq_textured;
 
 	};
 }

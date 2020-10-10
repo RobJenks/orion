@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <unordered_map>
+#include "../../../util/log.h"
 #include "render_slot.h"
 #include "render_config.h"
 
@@ -11,13 +12,17 @@ namespace Orion
 	class RenderQueue
 	{
 	public:
-		RenderQueue();
+		RenderQueue(const std::string& id);
+
+		ResultCode initialise();
 
 		void submit(const RenderConfig& config, T&& instance);
 		void submit(const RenderConfig& config, const T & instance);
 
 		void add_instance(size_t slot_index, T&& instance);
 		void add_instance(size_t slot_index, const T & instance);
+
+		void shutdown();
 
 	private:
 
@@ -26,6 +31,8 @@ namespace Orion
 
 	private:
 
+		std::string m_id;
+
 		std::vector<RenderSlot<T>> m_slots;
 		std::unordered_map<RenderConfig, size_t> m_slot_map;
 
@@ -33,8 +40,18 @@ namespace Orion
 
 
 	template<typename T>
-	inline RenderQueue<T>::RenderQueue()
+	inline RenderQueue<T>::RenderQueue(const std::string& id)
+		:
+		m_id(id)
 	{
+	}
+
+	template<typename T>
+	inline ResultCode RenderQueue<T>::initialise()
+	{
+		LOG_INFO("Initialising render queue \"" << m_id << "\"");
+
+		return ResultCodes::Success;
 	}
 
 	template<typename T>
@@ -74,6 +91,12 @@ namespace Orion
 	inline void RenderQueue<T>::add_instance(size_t slot_index, const T& instance)
 	{
 		m_slots[instance].add_instance(instance);
+	}
+
+	template<typename T>
+	inline void RenderQueue<T>::shutdown()
+	{
+		LOG_INFO("Shutting down render queue \"" << m_id << "\"");
 	}
 
     template<typename T>

@@ -30,6 +30,14 @@ namespace Orion
 
 		inline static constexpr bool isSuccess(ResultCode code) { return code == 0; }
 		inline static constexpr bool isError(ResultCode code) { return code != 0; }
+
+		// If we are currently in error then we retain that state, otherwise if we are in success state
+		// we return the new result (which will either remain in success state, or record an error)
+		inline static constexpr ResultCode aggregate(ResultCode current, ResultCode new_result)
+		{
+			return (current != ResultCodes::Success ? current : new_result);
+		}
+
 	};
 #	undef add
 
