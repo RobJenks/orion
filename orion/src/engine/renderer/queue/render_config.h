@@ -53,7 +53,7 @@ namespace std
 	template <>
 	struct hash<Orion::RenderConfig>
 	{
-		std::size_t operator()(const Orion::RenderConfig& rc) const
+		size_t operator()(const Orion::RenderConfig& rc) const
 		{
 			return rc.hash();
 		}
