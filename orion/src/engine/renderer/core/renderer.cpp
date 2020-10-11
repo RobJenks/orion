@@ -12,9 +12,8 @@ namespace Orion
 		m_textures(),
 		m_gui(),
 		m_camera(),
-		m_renderStats(),
-
-		rq_textured("Standard textured")
+		m_queues(),
+		m_renderStats()
 	{	
 	}
 
@@ -32,7 +31,7 @@ namespace Orion
 		init.resolution.reset = reset;
 		if (!bgfx::init(init))
 		{
-			RETURN_LOG_ERROR("Could not initialise core rendering library", ResultCodes::CouldNotInitEngineLibrary);
+			RETURN_LOG_ERROR("Could not initialise core rendering libraries", ResultCodes::CouldNotInitEngineLibrary);
 		}
 
 		// Set debug levels
@@ -84,12 +83,7 @@ namespace Orion
 
 	ResultCode Renderer::initialiseRenderQueues()
 	{
-		ResultCode result = ResultCodes::Success;
-
-		// Initialise each render queue in turn
-		result = ResultCodes::aggregate(result, rq_textured.initialise());
-
-		return result;
+		return m_queues.initialise();
 	}
 
 	ResultCode Renderer::frame(const RendererInputState& state)
@@ -151,7 +145,7 @@ namespace Orion
 		shutdownCamera();
 		shutdownRenderQueues();
 
-		LOG_INFO("Shutting down core render library");
+		LOG_INFO("Shutting down core render libraries");
 		bgfx::shutdown();
 	}
 
@@ -182,8 +176,7 @@ namespace Orion
 
 	void Renderer::shutdownRenderQueues()
 	{
-		// Shutdown each render queue in turn
-		rq_textured.shutdown();
+		return m_queues.shutdown();
 	}
 
 }
