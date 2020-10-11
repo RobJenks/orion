@@ -12,9 +12,8 @@ namespace Orion
 		m_textures(),
 		m_gui(),
 		m_camera(),
-		m_renderStats(),
-
-		rq_textured("Standard textured")
+		m_queues(),
+		m_renderStats()
 	{	
 	}
 
@@ -32,7 +31,7 @@ namespace Orion
 		init.resolution.reset = reset;
 		if (!bgfx::init(init))
 		{
-			RETURN_LOG_ERROR("Could not initialise core rendering library", ResultCodes::CouldNotInitEngineLibrary);
+			RETURN_LOG_ERROR("Could not initialise core rendering libraries", ResultCodes::CouldNotInitEngineLibrary);
 		}
 
 		// Set debug levels
@@ -84,18 +83,21 @@ namespace Orion
 
 	ResultCode Renderer::initialiseRenderQueues()
 	{
-		ResultCode result = ResultCodes::Success;
-
-		// Initialise each render queue in turn
-		result = ResultCodes::aggregate(result, rq_textured.initialise());
-
-		return result;
+		return m_queues.initialise();
 	}
 
 	ResultCode Renderer::frame(const RendererInputState& state)
 	{
+		// Pre-frame initialisation for all renderer components
 		RETURN_ON_ERROR(beginFrame(state));
+
+		// Render execution (including rq submission) for all renderer components
 		RETURN_ON_ERROR(executeFrame(state));
+
+		// Process the render queue and execute all rendering
+		RETURN_ON_ERROR(render(state));
+
+		// Post-frame cleanup for all renderer components
 		RETURN_ON_ERROR(endFrame(state));
 
 		return ResultCodes::Success;
@@ -138,6 +140,33 @@ namespace Orion
 		return ResultCodes::Success;
 	}
 
+	ResultCode Renderer::render(const RendererInputState& state)
+	{
+        // Process all renderer queues and submit geometry
+        RETURN_ON_ERROR(processRenderQueues(state));
+
+        // Reset and clean up render queues
+        RETURN_ON_ERROR(resetRenderQueues());
+
+        return ResultCodes::Success;
+	}
+
+	ResultCode Renderer::processRenderQueues(const RendererInputState& state)
+	{
+        // Process each render queue
+        RETURN_ON_ERROR(processRenderQueue(m_queues.primary(), state));
+
+        return ResultCodes::Success;
+	}
+
+	ResultCode Renderer::resetRenderQueues()
+	{
+		// Proces each render queue
+        RETURN_ON_ERROR(resetRenderQueue(m_queues.primary()));
+
+        return ResultCodes::Success;
+	}
+
 
 
 	void Renderer::shutdown()
@@ -151,7 +180,7 @@ namespace Orion
 		shutdownCamera();
 		shutdownRenderQueues();
 
-		LOG_INFO("Shutting down core render library");
+		LOG_INFO("Shutting down core render libraries");
 		bgfx::shutdown();
 	}
 
@@ -182,8 +211,7 @@ namespace Orion
 
 	void Renderer::shutdownRenderQueues()
 	{
-		// Shutdown each render queue in turn
-		rq_textured.shutdown();
+		m_queues.shutdown();
 	}
 
 }

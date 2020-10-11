@@ -39,6 +39,9 @@ namespace Orion
 	ResultCode GuiManager::executeFrame(const RendererInputState& state)
 	{
 		(void)state;
+
+		ImGui::Render();
+
 		return ResultCodes::Success;
 	}
 

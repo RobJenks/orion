@@ -114,6 +114,9 @@
     <ClCompile Include="..\..\..\orion\src\engine\renderer\queue\render_config.cpp">
       <Filter>src\engine\renderer\queue</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\orion\src\engine\renderer\queue\render_queues.cpp">
+      <Filter>src\engine\renderer\queue</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\orion\src\main\orion.h">
@@ -205,6 +208,15 @@
     </ClInclude>
     <ClInclude Include="..\..\..\orion\src\engine\renderer\queue\render_slot.h">
       <Filter>src\engine\renderer\queue</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\orion\src\engine\renderer\queue\render_queues.h">
+      <Filter>src\engine\renderer\queue</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\orion\src\engine\renderer\queue\render_instance.h">
+      <Filter>src\engine\renderer\queue</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\orion\src\engine\renderer\shader\uniform_binding.h">
+      <Filter>src\engine\renderer\shader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

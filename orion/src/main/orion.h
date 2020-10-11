@@ -26,7 +26,7 @@ namespace Orion
 
 		float getFrameMs() const;
 
-		void _renderTemporaryScene() const;
+		void _renderTemporaryScene();
 
     private:
 

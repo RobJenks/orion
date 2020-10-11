@@ -16,6 +16,12 @@ namespace Orion
 		RenderSlot(RenderConfig config, T && first_instance);
 		RenderSlot(RenderConfig config, const T & first_instance);
 
+		void add_instance(T&& instance);
+		void add_instance(const T& instance);
+
+		inline const RenderConfig& getConfig() const { return m_config; }
+		inline const std::vector<T>& getInstances() const { return m_instances; }
+
 	private:
 
 		RenderConfig m_config;
@@ -48,5 +54,17 @@ namespace Orion
 		m_instances({ first_instance })
 	{
 		m_instances.reserve(DEFAULT_INSTANCE_ALLOC_SIZE);
+	}
+
+	template<typename T>
+	inline void RenderSlot<T>::add_instance(T&& instance)
+	{
+        m_instances.push_back(instance);
+	}
+
+	template<typename T>
+	inline void RenderSlot<T>::add_instance(const T& instance)
+	{
+        m_instances.push_back(instance);
 	}
 }
