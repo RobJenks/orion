@@ -4,7 +4,7 @@ namespace Orion
 {
 	RenderQueues::RenderQueues()
 		:
-		m_textured("Standard textured")
+		m_primary("Primary")
 	{
 	}
 
@@ -15,7 +15,7 @@ namespace Orion
 		// Initialise each render queue in turn
 		ResultCode result = ResultCodes::Success;
 
-		result = ResultCodes::aggregate(result, m_textured.initialise());
+		result = ResultCodes::aggregate(result, m_primary.initialise());
 
 		return result;
 	}
@@ -25,6 +25,6 @@ namespace Orion
 		LOG_INFO("Shutting down render queues");
 
 		// Shutdown each render queue in turn
-		m_textured.shutdown();
+		m_primary.shutdown();
 	}
 }

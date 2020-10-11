@@ -22,6 +22,10 @@ namespace Orion
 		void add_instance(size_t slot_index, T&& instance);
 		void add_instance(size_t slot_index, const T & instance);
 
+		inline const std::vector<RenderSlot<T>>& getSlots() const { return m_slots; }
+
+		ResultCode reset();
+
 		void shutdown();
 
 	private:
@@ -60,7 +64,7 @@ namespace Orion
 		const auto ix = m_slot_map.find(config);
 		if (ix != m_slot_map.end())
 		{
-            add_instance(index, ix.second);
+            add_instance(ix->second, instance);
 		}
         else
         {
@@ -74,7 +78,7 @@ namespace Orion
 		const auto ix = m_slot_map.find(config);
 		if (ix != m_slot_map.end())
 		{
-			add_instance(index, ix.second);
+			add_instance(ix->second, instance);
 		}
 		else
 		{
@@ -85,12 +89,20 @@ namespace Orion
 	template<typename T>
 	inline void RenderQueue<T>::add_instance(size_t slot_index, T&& instance)
 	{
-		m_slots[instance].add_instance(instance);
+		m_slots[slot_index].add_instance(instance);
 	}
 	template<typename T>
 	inline void RenderQueue<T>::add_instance(size_t slot_index, const T& instance)
 	{
-		m_slots[instance].add_instance(instance);
+		m_slots[slot_index].add_instance(instance);
+	}
+
+	template<typename T>
+	inline ResultCode RenderQueue<T>::reset()
+	{
+		// TODO: For now, just clear all data between frames.  Later, persist those which are in use for a number of frames for efficiency
+		m_slots.clear();
+		m_slot_map.clear();
 	}
 
 	template<typename T>
@@ -103,7 +115,7 @@ namespace Orion
     inline void RenderQueue<T>::new_slot(const RenderConfig& config, T&& first_instance)
     {
 		const auto index = m_slots.size();
-		m_slots.push_back(T(config, first_instance));
+		m_slots.push_back(RenderSlot<T>(config, first_instance));
 
 		m_slot_map[config] = index;
     }
@@ -111,7 +123,7 @@ namespace Orion
 	inline void RenderQueue<T>::new_slot(const RenderConfig& config, const T& first_instance)
 	{
 		const auto index = m_slots.size();
-		m_slots.push_back(T(config, first_instance));
+		m_slots.push_back(RenderSlot<T>(config, first_instance));
 
 		m_slot_map[config] = index;
 	}

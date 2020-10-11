@@ -13,19 +13,6 @@
 
 namespace Orion
 {
-    
-	struct InstanceData
-	{
-		float transform[16];
-		float colour[4];
-	};
-	struct TexInstanceData
-	{
-		float transform[16];
-	};
-
-
-
     Orion::Orion(const char* name, const char* description, const char* url)
         :
         entry::AppI(name, description, url),
@@ -104,7 +91,7 @@ namespace Orion
 		return float(bgfx::getStats()->cpuTimeFrame) * (1000.0f / float(bgfx::getStats()->cpuTimerFreq)) * 0.001f;
 	}
 
-	void Orion::_renderTemporaryScene() const
+	void Orion::_renderTemporaryScene()
 	{
 		// Temporary
 		static float timeRot = 0.0f;
@@ -125,7 +112,26 @@ namespace Orion
 		
 			bgfx::submit(0, m_renderer.getShaderManager().getProgram("colour"));
 		}
+
+		const auto shader = m_renderer.getShaderManager().getProgram("inst_textured");
+		const auto mesh = m_renderer.getGeometryManager().getMesh("quad");
+		const auto uniform = m_renderer.getShaderManager().getUniform("s_texColor");
+		const auto texture = m_renderer.getTextureManager().getTexture("fieldstone");
+		uint64_t state = BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_WRITE_Z | BGFX_STATE_DEPTH_TEST_LESS | BGFX_STATE_CULL_CW | BGFX_STATE_MSAA;
+		RenderConfig config(shader, mesh.vertex_buffer, mesh.index_buffer, state, { TextureUniformBinding(texture, uniform), TextureUniformBinding(), TextureUniformBinding(), TextureUniformBinding() });
+
+		InstanceData inst;
+		float scale[16], trans[16];
+		bx::mtxScale(scale, 10.0f);
+		for (int i = 0; i < 4; ++i)
 		{
+			bx::mtxTranslate(trans, -30.0f + (float(i) * 20.0f), 15.0f, 0.0f);
+			bx::mtxMul(inst.transform, scale, trans);
+
+			m_renderer.queue().primary().submit(config, inst);
+		}
+
+		/*{
 			uint64_t state = BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_WRITE_Z | BGFX_STATE_DEPTH_TEST_LESS | BGFX_STATE_CULL_CW | BGFX_STATE_MSAA;
 			uint32_t numInstances = 4;
 			uint16_t instanceStride = sizeof(TexInstanceData);
@@ -158,7 +164,7 @@ namespace Orion
 
 				bgfx::submit(0, m_renderer.getShaderManager().getProgram("inst_textured"));
 			}
-		}
+		}*/
 	}
 }
 

@@ -24,6 +24,7 @@ namespace Orion
 		add(109, FailedToLoadTextureResource);
 		add(110, FailedToCreateMesh);
 		add(111, CannotLoadDuplicateTexture);
+		add(112, CannotAllocateSufficientlyLargeInstanceBuffer);
 		
 
 

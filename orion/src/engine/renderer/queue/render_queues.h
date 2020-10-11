@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../queue/render_queue.h"
-#include "../geometry/vertex_definitions.h"
+#include "../queue/render_instance.h"
 
 namespace Orion
 {
@@ -12,11 +12,13 @@ namespace Orion
 		RenderQueues();
 		ResultCode initialise();
 
-		const inline RenderQueue<VertexDefinitions::PosTexVertex>& rqTextured() { return m_textured; }
+		const inline RenderQueue<InstanceData>& primary() const { return m_primary; }
+
+		inline RenderQueue<InstanceData>& primary() { return m_primary; }
 
 		void shutdown();
 
 	private:
-		RenderQueue<VertexDefinitions::PosTexVertex> m_textured;
+		RenderQueue<InstanceData> m_primary;
 	};
 }

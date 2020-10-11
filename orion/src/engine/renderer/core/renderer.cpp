@@ -88,8 +88,16 @@ namespace Orion
 
 	ResultCode Renderer::frame(const RendererInputState& state)
 	{
+		// Pre-frame initialisation for all renderer components
 		RETURN_ON_ERROR(beginFrame(state));
+
+		// Render execution (including rq submission) for all renderer components
 		RETURN_ON_ERROR(executeFrame(state));
+
+		// Process the render queue and execute all rendering
+		RETURN_ON_ERROR(render(state));
+
+		// Post-frame cleanup for all renderer components
 		RETURN_ON_ERROR(endFrame(state));
 
 		return ResultCodes::Success;
@@ -130,6 +138,33 @@ namespace Orion
 		RETURN_ON_ERROR(m_camera.endFrame(state));
 
 		return ResultCodes::Success;
+	}
+
+	ResultCode Renderer::render(const RendererInputState& state)
+	{
+        // Process all renderer queues and submit geometry
+        RETURN_ON_ERROR(processRenderQueues(state));
+
+        // Reset and clean up render queues
+        RETURN_ON_ERROR(resetRenderQueues());
+
+        return ResultCodes::Success;
+	}
+
+	ResultCode Renderer::processRenderQueues(const RendererInputState& state)
+	{
+        // Process each render queue
+        RETURN_ON_ERROR(processRenderQueue(m_queues.primary(), state));
+
+        return ResultCodes::Success;
+	}
+
+	ResultCode Renderer::resetRenderQueues()
+	{
+		// Proces each render queue
+        RETURN_ON_ERROR(resetRenderQueue(m_queues.primary()));
+
+        return ResultCodes::Success;
 	}
 
 
@@ -176,7 +211,7 @@ namespace Orion
 
 	void Renderer::shutdownRenderQueues()
 	{
-		return m_queues.shutdown();
+		m_queues.shutdown();
 	}
 
 }

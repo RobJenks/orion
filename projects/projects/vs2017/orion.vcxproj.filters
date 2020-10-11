@@ -212,6 +212,12 @@
     <ClInclude Include="..\..\..\orion\src\engine\renderer\queue\render_queues.h">
       <Filter>src\engine\renderer\queue</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\orion\src\engine\renderer\queue\render_instance.h">
+      <Filter>src\engine\renderer\queue</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\orion\src\engine\renderer\shader\uniform_binding.h">
+      <Filter>src\engine\renderer\shader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\orion\shaders\instanced_texture\fs_instanced_texture.sc">
