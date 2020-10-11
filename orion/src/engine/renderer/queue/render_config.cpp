@@ -54,7 +54,7 @@ namespace Orion
 	{
 		const bool equal =
 			m_shader.idx == other.m_shader.idx &&
-			m_vb.idx == other.m_ib.idx &&
+			m_vb.idx == other.m_vb.idx &&
 			m_ib.idx == other.m_ib.idx &&
 			m_state == other.m_state;
 

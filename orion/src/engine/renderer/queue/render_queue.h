@@ -38,7 +38,7 @@ namespace Orion
 		std::string m_id;
 
 		std::vector<RenderSlot<T>> m_slots;
-		std::unordered_map<RenderConfig, size_t> m_slot_map;
+		std::unordered_map<RenderConfig, size_t, std::hash<RenderConfig>> m_slot_map;
 
 	};
 
