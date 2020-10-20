@@ -42,6 +42,10 @@ namespace Orion
 		inline RenderQueues& queue() { return m_queues; }
 		const inline RenderQueues& queue() const { return m_queues; }
 
+		void submitImmediate(const RenderConfig& config);
+		void submitImmediate(const RenderConfig& config, float transform[16]);
+		
+
 		void shutdown();
 
 
@@ -63,6 +67,7 @@ namespace Orion
 		ResultCode processRenderQueues(const RendererInputState& state);
 		template <typename T>
 		ResultCode processRenderQueue(const RenderQueue<T>& queue, const RendererInputState& state);
+		void submitWithRenderConfig(const RenderConfig& config);
 
 		ResultCode resetRenderQueues();
 		template <typename T>
@@ -105,24 +110,13 @@ namespace Orion
 				return ResultCodes::CannotAllocateSufficientlyLargeInstanceBuffer;
 			}
 
-			// Build instance buffer
+			// Build and assign instance buffer
 			bgfx::allocInstanceDataBuffer(&instanceBuffer, count, sizeof(T));
 			memcpy((void*)instanceBuffer.data, (const void*)instances.data(), count * sizeof(T));
+			bgfx::setInstanceDataBuffer(&instanceBuffer);
 
 			// Submit draw call
-			const RenderConfig& config = slot.getConfig();
-			bgfx::setVertexBuffer(0, config.get_vertex_buffer());
-			bgfx::setIndexBuffer(config.get_index_buffer());
-			bgfx::setInstanceDataBuffer(&instanceBuffer);
-			bgfx::setState(config.get_state());
-
-			const auto textures = config.get_textures();
-			for (uint8_t i = 0, texture_count = config.get_texture_count(); i < texture_count; ++i)
-			{
-				bgfx::setTexture(0, textures[i].uniform, textures[i].texture);
-			}
-			
-			bgfx::submit(0, config.get_shader());
+			submitWithRenderConfig(slot.getConfig());
 		}
 
 		return ResultCodes::Success;

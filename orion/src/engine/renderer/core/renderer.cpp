@@ -167,6 +167,20 @@ namespace Orion
         return ResultCodes::Success;
 	}
 
+	void Renderer::submitWithRenderConfig(const RenderConfig& config)
+	{
+		bgfx::setVertexBuffer(0, config.get_vertex_buffer());
+		bgfx::setIndexBuffer(config.get_index_buffer());
+		bgfx::setState(config.get_state());
+
+		const auto textures = config.get_textures().data();
+		for (uint8_t i = 0, texture_count = config.get_textures().get_texture_count(); i < texture_count; ++i)
+		{
+			bgfx::setTexture(0, textures[i].uniform, textures[i].texture);
+		}
+
+		bgfx::submit(0, config.get_shader());
+	}
 
 
 	void Renderer::shutdown()
@@ -182,6 +196,17 @@ namespace Orion
 
 		LOG_INFO("Shutting down core render libraries");
 		bgfx::shutdown();
+	}
+
+	void Renderer::submitImmediate(const RenderConfig& config)
+	{
+		submitWithRenderConfig(config);
+	}
+
+	void Renderer::submitImmediate(const RenderConfig& config, float transform[16])
+	{
+		bgfx::setTransform(transform);
+		submitImmediate(config);
 	}
 
 	void Renderer::shutdownShaderManager()

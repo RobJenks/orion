@@ -67,7 +67,8 @@ namespace Orion
 
 
 			m_renderer.frame(renderState);
-			_renderTemporaryScene();
+			_renderTemporaryCube();
+			_renderTemporaryTiles();
 
             // Debug print FPS
             bgfx::dbgTextClear();
@@ -91,34 +92,34 @@ namespace Orion
 		return float(bgfx::getStats()->cpuTimeFrame) * (1000.0f / float(bgfx::getStats()->cpuTimerFreq)) * 0.001f;
 	}
 
-	void Orion::_renderTemporaryScene()
+	// Temporary
+	void Orion::_renderTemporaryCube()
 	{
-		// Temporary
+		const auto shader = m_renderer.getShaderManager().getProgram("colour");
+		const auto mesh = m_renderer.getGeometryManager().getMesh("cube");
+
 		static float timeRot = 0.0f;
 		timeRot += float(bgfx::getStats()->cpuTimeFrame) * (1000.0f / float(bgfx::getStats()->cpuTimerFreq)) * 0.001f;
-		{
-			uint64_t state = BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_WRITE_Z | BGFX_STATE_DEPTH_TEST_LESS | BGFX_STATE_CULL_CW | BGFX_STATE_MSAA;
-
-			float rot[16], scale[16], world[16];
-			bx::mtxRotateXY(rot, 0.42f + timeRot, 0.74f + timeRot);
-			bx::mtxScale(scale, 8.0f);
-			bx::mtxMul(world, scale, rot);
-			bgfx::setTransform(world);
-
-			const auto mesh = m_renderer.getGeometryManager().getMesh("cube");
-			bgfx::setVertexBuffer(0, mesh.vertex_buffer);
-			bgfx::setIndexBuffer(mesh.index_buffer);
-			bgfx::setState(state);
 		
-			bgfx::submit(0, m_renderer.getShaderManager().getProgram("colour"));
-		}
+		uint64_t state = BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_WRITE_Z | BGFX_STATE_DEPTH_TEST_LESS | BGFX_STATE_CULL_CW | BGFX_STATE_MSAA;
 
+		float rot[16], scale[16], world[16];
+		bx::mtxRotateXY(rot, 0.42f + timeRot, 0.74f + timeRot);
+		bx::mtxScale(scale, 8.0f);
+		bx::mtxMul(world, scale, rot);
+
+		m_renderer.submitImmediate(RenderConfig(shader, mesh.vertex_buffer, mesh.index_buffer, state), world);
+	}
+
+	// Temporary
+	void Orion::_renderTemporaryTiles()
+	{
 		const auto shader = m_renderer.getShaderManager().getProgram("inst_textured");
 		const auto mesh = m_renderer.getGeometryManager().getMesh("quad");
 		const auto uniform = m_renderer.getShaderManager().getUniform("s_texColor");
 		const auto texture = m_renderer.getTextureManager().getTexture("fieldstone");
 		uint64_t state = BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_WRITE_Z | BGFX_STATE_DEPTH_TEST_LESS | BGFX_STATE_CULL_CW | BGFX_STATE_MSAA;
-		RenderConfig config(shader, mesh.vertex_buffer, mesh.index_buffer, state, { TextureUniformBinding(texture, uniform), TextureUniformBinding(), TextureUniformBinding(), TextureUniformBinding() });
+		RenderConfig config(shader, mesh.vertex_buffer, mesh.index_buffer, state, RenderConfig::Textures(TextureUniformBinding(texture, uniform)));
 
 		InstanceData inst;
 		float scale[16], trans[16];
@@ -130,41 +131,6 @@ namespace Orion
 
 			m_renderer.queue().primary().submit(config, inst);
 		}
-
-		/*{
-			uint64_t state = BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_WRITE_Z | BGFX_STATE_DEPTH_TEST_LESS | BGFX_STATE_CULL_CW | BGFX_STATE_MSAA;
-			uint32_t numInstances = 4;
-			uint16_t instanceStride = sizeof(TexInstanceData);
-
-			if (numInstances == bgfx::getAvailInstanceDataBuffer(numInstances, instanceStride))
-			{
-				bgfx::InstanceDataBuffer instances;
-				bgfx::allocInstanceDataBuffer(&instances, numInstances, instanceStride);
-
-				float scale[16], trans[16];
-				bx::mtxScale(scale, 10.0f);
-				TexInstanceData* data = (TexInstanceData*)instances.data;
-				for (int i = 0; i < 4; ++i)
-				{
-					float* world = (float*)data->transform;
-					bx::mtxTranslate(trans, -30.0f + (float(i) * 20.0f), 15.0f, 0.0f);
-					bx::mtxMul(world, scale, trans);
-
-					data += 1;
-				}
-
-				const auto mesh = m_renderer.getGeometryManager().getMesh("quad");
-				bgfx::setVertexBuffer(0, mesh.vertex_buffer);
-				bgfx::setIndexBuffer(mesh.index_buffer);
-				bgfx::setInstanceDataBuffer(&instances);
-				bgfx::setTexture(0,
-					m_renderer.getShaderManager().getUniform("s_texColor"),
-					m_renderer.getTextureManager().getTexture("fieldstone"));
-				bgfx::setState(state);
-
-				bgfx::submit(0, m_renderer.getShaderManager().getProgram("inst_textured"));
-			}
-		}*/
 	}
 }
 

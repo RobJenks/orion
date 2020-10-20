@@ -365,6 +365,7 @@
     <ClInclude Include="..\..\..\orion\src\math\vec2.h" />
     <ClInclude Include="..\..\..\orion\src\tile\tile.h" />
     <ClInclude Include="..\..\..\orion\src\tile\tile_def.h" />
+    <ClInclude Include="..\..\..\orion\src\util\bgfx_support.h" />
     <ClInclude Include="..\..\..\orion\src\util\func.h" />
     <ClInclude Include="..\..\..\orion\src\util\log.h" />
     <ClInclude Include="..\..\..\orion\src\util\result_code.h" />
