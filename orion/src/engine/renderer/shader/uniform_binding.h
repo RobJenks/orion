@@ -1,34 +1,35 @@
 #pragma once
 
 #include <bgfx_utils.h>
+#include "../../../util/bgfx_support.h"
 
 namespace Orion
 {
 	struct TextureUniformBinding
 	{
-		bgfx::TextureHandle texture;
-		bgfx::UniformHandle uniform;
+		const bgfx::TextureHandle texture;
+		const bgfx::UniformHandle uniform;
 
-		inline TextureUniformBinding()
+		inline constexpr TextureUniformBinding()
 			:
-			TextureUniformBinding(BGFX_INVALID_HANDLE, BGFX_INVALID_HANDLE)
+			TextureUniformBinding({ BgfxSupport::INVALID_HANDLE }, { BgfxSupport::INVALID_HANDLE })
 		{
 		}
 
-		inline TextureUniformBinding(bgfx::TextureHandle textureHandle, bgfx::UniformHandle uniformHandle)
+		inline constexpr TextureUniformBinding(bgfx::TextureHandle textureHandle, bgfx::UniformHandle uniformHandle)
 			:
 			texture(textureHandle),
 			uniform(uniformHandle)
 		{
 		}
 
-		inline bool operator==(const TextureUniformBinding& other) const
+		inline constexpr bool operator==(const TextureUniformBinding& other) const
 		{
 			return ( texture.idx == other.texture.idx &&
 					 uniform.idx == other.uniform.idx);
 		}
 
-		inline bool operator!=(const TextureUniformBinding& other) const
+		inline constexpr bool operator!=(const TextureUniformBinding& other) const
 		{
 			return !(*this == other);
 		}
