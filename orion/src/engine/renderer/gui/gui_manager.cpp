@@ -33,6 +33,8 @@ namespace Orion
 			, uint16_t(state.height)
 		);
 
+		bgfx::dbgTextClear();
+
 		return ResultCodes::Success;
 	}
 

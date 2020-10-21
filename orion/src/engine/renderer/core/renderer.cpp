@@ -126,6 +126,9 @@ namespace Orion
 		RETURN_ON_ERROR(m_gui.executeFrame(state));
 		RETURN_ON_ERROR(m_camera.executeFrame(state));
 
+		// Lock buffers and advance to next frame
+		bgfx::frame();
+
 		return ResultCodes::Success;
 	}
 
