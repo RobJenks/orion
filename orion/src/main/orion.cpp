@@ -70,11 +70,6 @@ namespace Orion
 
 			m_renderer.frame(renderState);
 
-			//m_renderStats.frame(bgfx::getStats());
-            //bgfx::dbgTextPrintf(0, 0, 0x0f, "FPS: %.1f", m_renderStats.getFps());
-
-			// bgfx::frame was here
-
             return true;
         }
 

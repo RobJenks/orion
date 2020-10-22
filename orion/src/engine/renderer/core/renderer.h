@@ -57,6 +57,7 @@ namespace Orion
 		ResultCode initialiseGuiManger();
 		ResultCode initialiseCamera();
 		ResultCode initialiseRenderQueues();
+		ResultCode initialiseRenderStats();
 
 		ResultCode beginFrame(const RendererInputState& state);
 		ResultCode executeFrame(const RendererInputState& state);
@@ -73,12 +74,15 @@ namespace Orion
 		template <typename T>
 		ResultCode resetRenderQueue(RenderQueue<T>& queue);
 
+		void renderDebugInfo();
+
 		void shutdownShaderManager();
 		void shutdownGeometryManger();
 		void shutdownTextureManager();
 		void shutdownGuiManger();
 		void shutdownCamera();
 		void shutdownRenderQueues();
+		void shutdownRenderStats();
 
 
 	private:
