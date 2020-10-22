@@ -65,20 +65,10 @@ namespace Orion
 			renderState.view_at = { 0.0f, 0.0f, 0.0f };
 			renderState.view_dir = { 0.0f, 0.0f, -35.0f };
 
-
-			m_renderer.frame(renderState);
 			_renderTemporaryCube();
 			_renderTemporaryTiles();
 
-            // Debug print FPS
-            bgfx::dbgTextClear();
-
-			//m_renderStats.frame(bgfx::getStats());
-            //bgfx::dbgTextPrintf(0, 0, 0x0f, "FPS: %.1f", m_renderStats.getFps());
-
-            // Advance to next frame. Rendering thread will be kicked to
-            // process submitted rendering primitives.
-            bgfx::frame();
+			m_renderer.frame(renderState);
 
             return true;
         }

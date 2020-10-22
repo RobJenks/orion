@@ -2,6 +2,8 @@
 
 #include <array>
 #include "bgfx/bgfx.h"
+#include "../../../util/result_code.h"
+struct RendererInputState;
 
 namespace Orion
 {
@@ -15,9 +17,15 @@ namespace Orion
 
         RenderStats();
 
-        void frame(const bgfx::Stats * stats);
+		ResultCode initialise();
+
+		ResultCode beginFrame(const RendererInputState& state);
+		ResultCode executeFrame(const RendererInputState& state);
+		ResultCode endFrame(const RendererInputState& state);
 
         double getFps() const;
+
+		void shutdown();
 
     private:
 

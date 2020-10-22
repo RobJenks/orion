@@ -52,9 +52,11 @@ namespace Orion
 		RETURN_ON_ERROR(initialiseGuiManger());
 		RETURN_ON_ERROR(initialiseCamera());
 		RETURN_ON_ERROR(initialiseRenderQueues());
+		RETURN_ON_ERROR(initialiseRenderStats());
 
 		return ResultCodes::Success;
 	}
+
 
 	ResultCode Renderer::initialiseShaderManager()
 	{
@@ -86,6 +88,11 @@ namespace Orion
 		return m_queues.initialise();
 	}
 
+    ResultCode Renderer::initialiseRenderStats()
+    {
+        return m_renderStats.initialise();
+    }
+
 	ResultCode Renderer::frame(const RendererInputState& state)
 	{
 		// Pre-frame initialisation for all renderer components
@@ -110,6 +117,7 @@ namespace Orion
 		RETURN_ON_ERROR(m_textures.beginFrame(state));
 		RETURN_ON_ERROR(m_gui.beginFrame(state));
 		RETURN_ON_ERROR(m_camera.beginFrame(state));
+		RETURN_ON_ERROR(m_renderStats.beginFrame(state));
 
 		// Ensures at least one draw call is submitted and backbuffer is therefore cleared between frames
 		bgfx::touch(0);
@@ -125,6 +133,13 @@ namespace Orion
 		RETURN_ON_ERROR(m_textures.executeFrame(state));
 		RETURN_ON_ERROR(m_gui.executeFrame(state));
 		RETURN_ON_ERROR(m_camera.executeFrame(state));
+		RETURN_ON_ERROR(m_renderStats.executeFrame(state));
+
+        // Render debug overlay
+        renderDebugInfo();
+
+		// Lock buffers and advance to next frame
+		bgfx::frame();
 
 		return ResultCodes::Success;
 	}
@@ -136,6 +151,7 @@ namespace Orion
 		RETURN_ON_ERROR(m_textures.endFrame(state));
 		RETURN_ON_ERROR(m_gui.endFrame(state));
 		RETURN_ON_ERROR(m_camera.endFrame(state));
+		RETURN_ON_ERROR(m_renderStats.endFrame(state));
 
 		return ResultCodes::Success;
 	}
@@ -182,6 +198,10 @@ namespace Orion
 		bgfx::submit(0, config.get_shader());
 	}
 
+    void Renderer::renderDebugInfo()
+    {
+        bgfx::dbgTextPrintf(0, 0, 0x0f, "FPS: %.1f", m_renderStats.getFps());
+    }
 
 	void Renderer::shutdown()
 	{
@@ -193,6 +213,7 @@ namespace Orion
 		shutdownGuiManger();
 		shutdownCamera();
 		shutdownRenderQueues();
+        shutdownRenderStats();
 
 		LOG_INFO("Shutting down core render libraries");
 		bgfx::shutdown();
@@ -209,7 +230,8 @@ namespace Orion
 		submitImmediate(config);
 	}
 
-	void Renderer::shutdownShaderManager()
+
+    void Renderer::shutdownShaderManager()
 	{
 		m_shaders.shutdown();
 	}
@@ -239,4 +261,8 @@ namespace Orion
 		m_queues.shutdown();
 	}
 
+    void Renderer::shutdownRenderStats()
+    {
+        m_renderStats.shutdown();
+    }
 }

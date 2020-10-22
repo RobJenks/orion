@@ -1,5 +1,7 @@
 #include <numeric>
 
+#include "../../../util/log.h"
+#include "../core/renderer_input_state.h"
 #include "render_stats.h"
 
 namespace Orion
@@ -15,20 +17,49 @@ namespace Orion
     {
     }
 
-    void RenderStats::frame(const bgfx::Stats * stats)
-    {
+	ResultCode RenderStats::initialise()
+	{
+		LOG_INFO("Initialise render stats");
+
+		return ResultCodes::Success;
+	}
+
+	ResultCode RenderStats::beginFrame(const RendererInputState& state)
+	{
+        (void)state;    // Unused
+
+        // Calculate all stats for the prior frame
+        const auto stats = bgfx::getStats();
+
         // Calculate FPS
         const double cpuTimerFreqToMs = 1000.0 / stats->cpuTimerFreq;
         const double frameMs = double(stats->cpuTimeFrame) * cpuTimerFreqToMs;
 
         recordFpsSample(frameMs);
 
-		if ((m_timeToNextFpsCalc -= frameMs) <= 0)
-		{
-			m_fps = calculateFps();
-			m_timeToNextFpsCalc += FPS_CALC_INTERVAL_MS;
-		}
+        if ((m_timeToNextFpsCalc -= frameMs) <= 0)
+        {
+            m_fps = calculateFps();
+            m_timeToNextFpsCalc += FPS_CALC_INTERVAL_MS;
+        }
+
+        return ResultCodes::Success;
+	}
+
+	ResultCode RenderStats::executeFrame(const RendererInputState& state)
+	{
+        (void)state;    // Unused
+
+        return ResultCodes::Success;
+	}
+
+    ResultCode RenderStats::endFrame(const RendererInputState& state)
+    {
+        (void)state;    // Unused
+
+        return ResultCodes::Success;
     }
+
 
     void RenderStats::recordFpsSample(double frameMs)
     {
@@ -48,5 +79,11 @@ namespace Orion
 	double RenderStats::getFps() const
 	{
 		return m_fps;
+	}
+
+	void RenderStats::shutdown()
+	{
+		LOG_INFO("Shutting down render stats");
+
 	}
 }
