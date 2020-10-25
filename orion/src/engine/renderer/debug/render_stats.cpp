@@ -76,6 +76,12 @@ namespace Orion
 			(std::accumulate(m_fpsSamples.cbegin(), m_fpsSamples.cend(), 0.0) / double(FPS_CALC_SAMPLE_COUNT));
 	}
 
+	double RenderStats::getFrameMs() const
+	{
+		const auto stats = bgfx::getStats();
+		return double(stats->cpuTimeFrame) * (1000.0f / double(stats->cpuTimerFreq)) * 0.001f;
+	}
+
 	double RenderStats::getFps() const
 	{
 		return m_fps;

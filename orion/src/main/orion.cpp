@@ -60,7 +60,6 @@ namespace Orion
 			RendererInputState renderState;
 			renderState.width = m_width;
 			renderState.height = m_height;
-			renderState.frame_ms = getFrameMs();
 			renderState.mouse_state = &m_mouseState;
 			renderState.view_at = { 0.0f, 0.0f, 0.0f };
 			renderState.view_dir = { 0.0f, 0.0f, -35.0f };
@@ -75,12 +74,6 @@ namespace Orion
 
         return false;
     }
-
-
-	float Orion::getFrameMs() const
-	{
-		return float(bgfx::getStats()->cpuTimeFrame) * (1000.0f / float(bgfx::getStats()->cpuTimerFreq)) * 0.001f;
-	}
 
 	// Temporary
 	void Orion::_renderTemporaryCube()

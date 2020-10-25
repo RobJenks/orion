@@ -24,8 +24,6 @@ namespace Orion
 
 	private:
 
-		float getFrameMs() const;
-
 		void _renderTemporaryCube();
 		void _renderTemporaryTiles();
 

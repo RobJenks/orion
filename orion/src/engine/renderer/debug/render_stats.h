@@ -24,6 +24,7 @@ namespace Orion
 		ResultCode endFrame(const RendererInputState& state);
 
         double getFps() const;
+		double getFrameMs() const;
 
 		void shutdown();
 
