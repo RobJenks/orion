@@ -42,7 +42,9 @@ namespace Orion
 		}
 
 		// Temporary
-		Container tmp;
+		Container<int> tmp({ 10,10 });
+		
+		LOG_INFO("Size: " << tmp.getSize());
     }
 
     int Orion::shutdown()

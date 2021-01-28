@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+
 namespace Orion
 {
 	template <typename T>
@@ -123,5 +125,11 @@ namespace Orion
 		y /= other.y;
 
 		return *this;
+	}
+
+	template <typename T>
+	inline std::ostream& operator<<(std::ostream& ss, Vec2<T> const& v) {
+		ss << '(' << v.x << ',' << v.y << ')';
+		return ss;
 	}
 }

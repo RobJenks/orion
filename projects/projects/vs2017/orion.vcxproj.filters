@@ -221,6 +221,9 @@
     <ClInclude Include="..\..\..\orion\src\util\bgfx_support.h">
       <Filter>src\util</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\orion\src\util\debug.h">
+      <Filter>src\util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\orion\shaders\instanced_texture\fs_instanced_texture.sc">
