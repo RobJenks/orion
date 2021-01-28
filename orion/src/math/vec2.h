@@ -18,6 +18,10 @@ namespace Orion
 		Vec2<T>& operator=(const Vec2<T>& other);
 		bool operator==(const Vec2<T>& other);
 		bool operator!=(const Vec2<T>& other);
+		bool operator<(const Vec2<T>& other);
+		bool operator<=(const Vec2<T>& other);
+		bool operator>(const Vec2<T>& other);
+		bool operator>=(const Vec2<T>& other);
 
 		Vec2<T> & operator+=(const Vec2<T>& other);
 		Vec2<T> & operator-=(const Vec2<T>& other);
@@ -61,6 +65,33 @@ namespace Orion
 	bool Vec2<T>::operator!=(const Vec2<T>& other)
 	{
 		return !(*this == other);
+	}
+
+	template <typename T>
+	bool Vec2<T>::operator<(const Vec2<T>& other)
+	{
+		return x < other.x&& y < other.y;
+	}
+	
+
+	template <typename T>
+	bool Vec2<T>::operator<=(const Vec2<T>& other)
+	{
+		return x <= other.x && y <= other.y;
+	}
+	
+
+	template <typename T>
+	bool Vec2<T>::operator>(const Vec2<T>& other)
+	{
+		return x > other.x && y > other.y;
+	}
+	
+
+	template <typename T>
+	bool Vec2<T>::operator>=(const Vec2<T>& other)
+	{
+		return x >= other.x && y >= other.y;
 	}
 
 	template <typename T>

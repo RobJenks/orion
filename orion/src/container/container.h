@@ -47,7 +47,9 @@ namespace Orion
 	template <typename T>
 	Vec2<typename Container<T>::Coord> Container<T>::validateSize(Vec2<Coord> size)
 	{
-		ASS(size.x > 0 && size.y > 0 && size.x < 1000000 && size.y < 1000000, "Invalid container size " << size);
+		ASS(size.x > 0 && size.y > 0 &&
+			size.x < 1000000 && size.y < 1000000, "Invalid container size " << size);
+
 		return size;
 	}
 }

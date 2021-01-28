@@ -120,6 +120,7 @@ namespace Orion
 		m_nodes(),
 		m_free_nodes()
 	{
+		ASS(minBounds < maxBounds, "Invalid bounds; min=" << minBounds << ", max=" << maxBounds);
 		newNode(NO_NODE, minBounds, maxBounds);
 	}
 
