@@ -1,9 +1,9 @@
 #pragma once
 
-#include <assert.h>
 #include <array>
 #include <vector>
 #include <algorithm>
+#include "../util/debug.h"
 #include "../math/vec2.h"
 
 namespace Orion
@@ -16,7 +16,7 @@ namespace Orion
 		static const NodeIndex NO_NODE = std::numeric_limits<NodeIndex>::max();
 		enum class ChildNode { TopRight = 0, BottomRight = 1, BottomLeft = 2, TopLeft = 3 };
 
-		static const size_t MAX_NODE_ITEMS = 2;//16U;		// Maximum number of items which can be accepted by a node before it attempts to subdivide
+		static const size_t MAX_NODE_ITEMS = 16U;		// Maximum number of items which can be accepted by a node before it attempts to subdivide
 		static const int MIN_NODE_SIZE = 4;				// Minimum size of nodes in any dimension, beyond which they will never subdivide, even if over item limit
 
 
@@ -226,7 +226,7 @@ namespace Orion
 		{
 			const auto child = node->getChildContainingPoint(pos);
 			index = node->getChildren()[static_cast<int>(child)];
-			assert(index != NO_NODE);
+			ASS(index != NO_NODE, "Missing child node: " << child);
 
 			node = &(m_nodes[index]);
 		}
@@ -362,7 +362,7 @@ namespace Orion
 	void Quadtree<T, TCoord>::subdivide(NodeIndex index)
 	{
 		// Do not get a reference to the node here, beofre children are created, since we are about to modify the node collection and the reference may be invalidated
-		assert(!m_nodes[index].hasChildren());
+		ASS(!m_nodes[index].hasChildren(), "Attempted to subdivide a node (index: " << index << ") with existing children");
 
 		// Create children
 		const auto pMin = m_nodes[index].getMinBounds(), pCtr = m_nodes[index].getCentrePoint(), pMax = m_nodes[index].getMaxBounds();

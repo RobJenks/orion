@@ -2,37 +2,52 @@
 
 #include <vector>
 
+#include "../util/debug.h"
 #include "../grid/grid.h"
 #include "../grid/quadtree.h"
 #include "../tile/tile.h"
 
 namespace Orion
 {
-	// Temporary
-	struct tmps
-	{
-		Vec2<int> pos;
-		size_t value;
-
-		tmps(Vec2<int> _pos, size_t _value) : pos(_pos), value(_value) { }
-		inline Vec2<int> getPosition() const { return pos; }
-		inline size_t getValue() const { return value; }
-
-	};
-
-
+	template <typename T>
 	class Container
 	{
 	public:
-		Container();
-		int tmp();
+		typedef std::vector<T> Items;
+		typedef typename Items::size_type Index;
+		typedef int Coord;
+
+		Container(Vec2<Coord> size);
+
+		inline Vec2<Coord> getSize() const { return m_size; }
 
 	private:
 
-		Grid				m_grid;
-		Quadtree<tmps, int>	m_tree;
-		std::vector<Tile>	m_tiles;
+		static Vec2<Coord> validateSize(Vec2<Coord> size);
 
+	private:
+
+		Vec2<Coord>				m_size;
+		Grid<Coord>				m_grid;
+		Quadtree<Index, Coord>	m_tree;
+		Items					m_items;
 
 	};
+
+	template <typename T>
+	Container<T>::Container(Vec2<Coord> size)
+		:
+		m_size(Container<T>::validateSize(size)),
+		m_grid(size),
+		m_tree(Vec2<Coord>(0, 0), size),
+		m_items()
+	{
+	}
+
+	template <typename T>
+	Vec2<typename Container<T>::Coord> Container<T>::validateSize(Vec2<Coord> size)
+	{
+		ASS(size.x > 0 && size.y > 0 && size.x < 1000000 && size.y < 1000000, "Invalid container size " << size);
+		return size;
+	}
 }
