@@ -1,8 +1,10 @@
 #pragma once
 
 #include <vector>
+#include <limits>
 
 #include "../util/debug.h"
+#include "../util/type_defaults.h"
 #include "../grid/grid.h"
 #include "../grid/quadtree.h"
 #include "../tile/tile.h"
@@ -13,43 +15,32 @@ namespace Orion
 	class Container
 	{
 	public:
-		typedef std::vector<T> Items;
-		typedef typename Items::size_type Index;
+		typedef size_t Index;
 		typedef int Coord;
+		static const Index NO_INDEX = std::numeric_limits<Index>::max();
 
 		Container(Vec2<Coord> size);
 
 		inline Vec2<Coord> getSize() const { return m_size; }
 
-	private:
-
-		static Vec2<Coord> validateSize(Vec2<Coord> size);
 
 	private:
 
 		Vec2<Coord>				m_size;
-		Grid<Coord>				m_grid;
-		Quadtree<Index, Coord>	m_tree;
-		Items					m_items;
+		Index					m_count;
+
+		Grid<Index, Coord>		m_grid;
+		Tile::Collection		m_tiles;
 
 	};
 
 	template <typename T>
 	Container<T>::Container(Vec2<Coord> size)
 		:
-		m_size(Container<T>::validateSize(size)),
-		m_grid(size),
-		m_tree(Vec2<Coord>(0, 0), size),
-		m_items()
+		m_size(size),
+		m_count(size.x * size.y),
+		m_grid(size, NO_INDEX)
 	{
 	}
 
-	template <typename T>
-	Vec2<typename Container<T>::Coord> Container<T>::validateSize(Vec2<Coord> size)
-	{
-		ASS(size.x > 0 && size.y > 0 &&
-			size.x < 1000000 && size.y < 1000000, "Invalid container size " << size);
-
-		return size;
-	}
 }

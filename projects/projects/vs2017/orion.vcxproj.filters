@@ -78,9 +78,6 @@
     <ClCompile Include="..\..\..\orion\src\grid\rotation.cpp">
       <Filter>src\grid</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\orion\src\container\container.cpp">
-      <Filter>src\container</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\orion\src\engine\renderer\core\renderer.cpp">
       <Filter>src\engine\renderer\core</Filter>
     </ClCompile>
@@ -222,6 +219,9 @@
       <Filter>src\util</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\orion\src\util\debug.h">
+      <Filter>src\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\orion\src\util\type_defaults.h">
       <Filter>src\util</Filter>
     </ClInclude>
   </ItemGroup>

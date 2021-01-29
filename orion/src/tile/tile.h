@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <vector>
 #include "../grid/dir4.h"
 
 namespace Orion
@@ -9,6 +10,7 @@ namespace Orion
 	{
 	public:
 
+		typedef std::vector<Tile> Collection;
 
 
 	private:

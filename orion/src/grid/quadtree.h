@@ -19,6 +19,14 @@ namespace Orion
 		static const size_t MAX_NODE_ITEMS = 16U;		// Maximum number of items which can be accepted by a node before it attempts to subdivide
 		static const int MIN_NODE_SIZE = 4;				// Minimum size of nodes in any dimension, beyond which they will never subdivide, even if over item limit
 
+		// Position-wrapped object
+		struct Item
+		{
+			T			 item;
+			Vec2<TCoord> pos;
+
+			Item(T && _item, Vec2<TCoord> && _pos) : item(_item), pos(_pos) {}
+		};
 
 		// Quadtree node
 		class Node
@@ -84,6 +92,8 @@ namespace Orion
 		void		clearItems();
 
 		void		findItems(Vec2<TCoord> minPos, Vec2<TCoord> maxPos, std::vector<T> & outItems) const;
+
+		T			getItemAtExact(Vec2<TCoord> pos) const;
 
 		void		subdivide(NodeIndex index);
 
@@ -302,10 +312,7 @@ namespace Orion
 			if (node.hasChildren())
 			{
 				const auto& children = node.getChildren();
-				search.push_back(children[0]);
-				search.push_back(children[1]);
-				search.push_back(children[2]);
-				search.push_back(children[3]);
+				search.insert(search.end(), children.begin(), children.end());
 			}
 			else
 			{
@@ -319,6 +326,38 @@ namespace Orion
 					{
 						outItems.push_back(item);
 					}
+				}
+			}
+		}
+	}
+
+	template<typename T, typename TCoord>
+	inline T Quadtree<T, TCoord>::getItemAtExact(Vec2<TCoord> pos) const
+	{
+		std::vector<NodeIndex> search({ getRoot() });
+
+		while (!search.empty())
+		{
+			auto index = search.back();
+			search.pop_back();
+			const auto& node = m_nodes[index];
+
+			// Skip this node immediately if it contains no part of the target region
+			if (!node.containsRegion(minPos, maxPos)) continue;
+
+			// Recurse into all children if this node has them (eligibility will be checked when they are pulled from the search stack)
+			if (node.hasChildren())
+			{
+				const auto& children = node.getChildren();
+				search.insert(search.end(), children.begin(), children.end());
+			}
+			else
+			{
+				// Otherwise, if this is a leaf node, check all items for eligibility
+				for (const T& item : node.getItems())
+				{
+					// Add the first item which has the exact required position
+					if (item.getPosition() == pos) return item;
 				}
 			}
 		}
@@ -338,6 +377,7 @@ namespace Orion
 		}
 		else
 		{
+
 			items.insert(items.cend(), node.getItems());
 		}
 	}
@@ -553,7 +593,7 @@ namespace Orion
 	template <typename T, typename TCoord>
 	bool Quadtree<T, TCoord>::Node::containsPoint(Vec2<TCoord> point) const
 	{
-		return point.x >= m_min_bounds.x && point.x < m_max_bounds.x&&
+		return point.x >= m_min_bounds.x && point.x < m_max_bounds.x &&
 			point.y >= m_min_bounds.y && point.y < m_max_bounds.y;
 	}
 

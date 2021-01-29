@@ -315,7 +315,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\orion\src\container\container.cpp" />
     <ClCompile Include="..\..\..\orion\src\engine\renderer\camera\camera.cpp" />
     <ClCompile Include="..\..\..\orion\src\engine\renderer\core\renderer.cpp" />
     <ClCompile Include="..\..\..\orion\src\engine\renderer\debug\render_stats.cpp" />
@@ -371,6 +370,7 @@
     <ClInclude Include="..\..\..\orion\src\util\log.h" />
     <ClInclude Include="..\..\..\orion\src\util\result_code.h" />
     <ClInclude Include="..\..\..\orion\src\util\types.h" />
+    <ClInclude Include="..\..\..\orion\src\util\type_defaults.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\orion\shaders\instanced_texture\fs_instanced_texture.sc" />
