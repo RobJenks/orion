@@ -11,36 +11,40 @@
 
 namespace Orion
 {
-	template <typename T>
 	class Container
 	{
 	public:
 		typedef size_t Index;
 		typedef int Coord;
+		typedef Grid<Index, Coord> TileGrid;
 		static const Index NO_INDEX = std::numeric_limits<Index>::max();
 
 		Container(Vec2<Coord> size);
 
 		inline Vec2<Coord> getSize() const { return m_size; }
 
+		const Tile::Collection& getTiles() const { return m_tiles; }
+		const Tile * getTileAt(Vec2<Coord> location) const;
+		const Tile & getTileAtUnchecked(Vec2<Coord> location) const;
+		bool addTile(const Tile& tile);
+		void addTileUnchecked(const Tile& tile);
+		bool removeTileAt(Vec2<Coord> location);
+		void removeTileAtUnchecked(Vec2<Coord> location);
+
+	private:
+
+		Index addTileAtNextFreeIndex(const Tile & tile);
+		void moveTileIndexToFreeList(Index index);
 
 	private:
 
 		Vec2<Coord>				m_size;
 		Index					m_count;
 
-		Grid<Index, Coord>		m_grid;
+		TileGrid				m_grid;
 		Tile::Collection		m_tiles;
+		std::vector<Index>		m_free_tile_indices;
 
 	};
-
-	template <typename T>
-	Container<T>::Container(Vec2<Coord> size)
-		:
-		m_size(size),
-		m_count(size.x * size.y),
-		m_grid(size, NO_INDEX)
-	{
-	}
 
 }

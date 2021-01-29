@@ -3,6 +3,9 @@
 #include "common.h"
 #include "../engine/renderer/core/renderer.h"
 
+// Temporary
+#include "../container/container.h"
+
 namespace Orion
 {
     class Orion : public entry::AppI
@@ -25,7 +28,7 @@ namespace Orion
 	private:
 
 		void _renderTemporaryCube();
-		void _renderTemporaryTiles();
+		void _renderTemporaryTiles(const RendererInputState & state);
 
     private:
 
@@ -37,5 +40,8 @@ namespace Orion
         uint32_t m_reset;
 
 		Renderer m_renderer;
+
+		// Temporary
+		Container tmp_data;
     };
 };

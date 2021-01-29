@@ -315,6 +315,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\orion\src\container\container.cpp" />
     <ClCompile Include="..\..\..\orion\src\engine\renderer\camera\camera.cpp" />
     <ClCompile Include="..\..\..\orion\src\engine\renderer\core\renderer.cpp" />
     <ClCompile Include="..\..\..\orion\src\engine\renderer\debug\render_stats.cpp" />

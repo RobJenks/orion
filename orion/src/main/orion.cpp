@@ -20,7 +20,9 @@ namespace Orion
         m_height(0U),
         m_debug(0U),
         m_reset(0U),
-		m_renderer()
+		m_renderer(),
+
+		tmp_data(Vec2<Container::Coord>(10, 10))
     {
     }
 
@@ -42,9 +44,9 @@ namespace Orion
 		}
 
 		// Temporary
-		Container<int> tmp({ 10,10 });
-		
-		LOG_INFO("Size: " << tmp.getSize());
+		ASS(tmp_data.addTile(Tile(1, Dir4::UP, { 1,2 })), "Add failed");
+		tmp_data.addTileUnchecked(Tile(12, Dir4::RIGHT, { 4,4 }));
+
     }
 
     int Orion::shutdown()
@@ -65,9 +67,9 @@ namespace Orion
 			renderState.mouse_state = &m_mouseState;
 			renderState.view_at = { 0.0f, 0.0f, 0.0f };
 			renderState.view_dir = { 0.0f, 0.0f, -35.0f };
-
+			
 			_renderTemporaryCube();
-			_renderTemporaryTiles();
+			_renderTemporaryTiles(renderState);
 
 			m_renderer.frame(renderState);
 
@@ -97,7 +99,7 @@ namespace Orion
 	}
 
 	// Temporary
-	void Orion::_renderTemporaryTiles()
+	void Orion::_renderTemporaryTiles(const RendererInputState & renderer_state)
 	{
 		const auto shader = m_renderer.getShaderManager().getProgram("inst_textured");
 		const auto mesh = m_renderer.getGeometryManager().getMesh("quad");
@@ -108,14 +110,27 @@ namespace Orion
 
 		InstanceData inst;
 		float scale[16], trans[16];
-		bx::mtxScale(scale, 10.0f);
+		bx::mtxScale(scale, 1.0f);
+
+		if (renderer_state.width == 121212121) std::cout << "";
+
 		for (int i = 0; i < 4; ++i)
 		{
-			bx::mtxTranslate(trans, -30.0f + (float(i) * 20.0f), 15.0f, 0.0f);
+			bx::mtxTranslate(trans, (i == 0) ? -36.0f : 35.0f, 18.0f, 0);
+			//bx::mtxTranslate(trans, 0.0f + (float(i) * 20.0f), 15.0f, 0.0f);
 			bx::mtxMul(inst.transform, scale, trans);
 
 			m_renderer.queue().primary().submit(config, inst);
 		}
+
+	/*	const auto & tiles = tmp_data.getTiles();
+		for (const auto& tile : tiles)
+		{
+			bx::mtxTranslate(trans, -30.0f + (float(tile.getLocation().x) * 20.0f), 15.0f + (float(tile.getLocation().y) * 20.0f), 0.0f);
+			bx::mtxMul(inst.transform, scale, trans);
+
+			m_renderer.queue().primary().submit(config, inst);
+		}*/
 	}
 }
 

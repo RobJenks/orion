@@ -17,7 +17,7 @@ namespace Orion
 		static const Vec2<TCoord> NO_CELL;
 		static const Index NO_INDEX;
 
-		Grid(Vec2<TCoord> size, T initial);
+		Grid(Vec2<TCoord> size, T initial, T defaultValue);
 
 		Index getIndex(Vec2<TCoord> location) const;
 		Index getIndex(TCoord x, TCoord y) const;
@@ -38,11 +38,26 @@ namespace Orion
 		T getOr(Index index, T defaultValue) const;
 		T getOr(Vec2<TCoord> location, T defaultValue) const;
 		
+		T getOrDefault(Index index) const;
+		T getOrDefault(Vec2<TCoord> location) const;
+		
 		T& getRefUnchecked(Index index);
 		T& getRefUnchecked(Vec2<TCoord> location);
 
 		void set(Index index, T&& value);
+		void set(Index index, const T & value);
 		void set(Vec2<TCoord> location, T&& value);
+		void set(Vec2<TCoord> location, const T & value);
+        
+		bool setIfValidIndex(Index index, T&& value);
+		bool setIfValidIndex(Index index, const T & value);
+		bool setIfValidLocation(Vec2<TCoord> location, T&& value);
+		bool setIfValidLocation(Vec2<TCoord> location, const T & value);
+
+        T setAndReturnPrevious(Index index, T&& value);
+        T setAndReturnPrevious(Index index, const T & value);
+        T setAndReturnPrevious(Vec2<TCoord> location, T&& value);
+        T setAndReturnPrevious(Vec2<TCoord> location, const T & value);
 
 		bool isEdge(Index index) const;
 		bool isEdgeUnchecked(Index index) const;
@@ -54,6 +69,14 @@ namespace Orion
 
 		// Returns the index of the next cell in this direction.  No bounds checking - assumes the next cell is a valid location
 		Index getNeighbourIndexUnchecked(Index index, Dir8 direction) const;
+
+        // Returns the value in the neighbouring cell
+        T getAdjacentOr(Vec2<TCoord> location, Dir8 direction, T defaultValue) const;
+        T getAdjacentUnchecked(Vec2<TCoord> location, Dir8 direction) const;
+
+        // Returns the value of the next cell in this direction.  No bounds checking - assumes the next cell is a valid location
+        T getAdjacentUnchecked(Index index, Dir8 direction) const;
+
 
 		// Returns the number of cells that exist from the given location in the given direction.  Assumes current location is valid
 		Index getCellCountInDirection(Vec2<TCoord> index, Dir8 direction) const;
@@ -77,6 +100,7 @@ namespace Orion
 		Vec2<TCoord>	m_size;
 		Index			m_count;
 		Data			m_data;
+        T               m_default;
 	};
 
 
@@ -89,10 +113,11 @@ namespace Orion
 	const typename Grid<T, TCoord>::Index Grid<T, TCoord>::NO_INDEX = std::numeric_limits<Index>::max();
 
 	template <typename T, typename TCoord>
-	Grid<T, TCoord>::Grid(Vec2<TCoord> size, T initial)
+	Grid<T, TCoord>::Grid(Vec2<TCoord> size, T initial, T defaultValue)
 		:
 		m_size(validatedSize(size)),
-		m_count(validatedCount(size.x * size.y))
+		m_count(validatedCount(size.x * size.y)),
+        m_default(defaultValue)
 	{
 		m_data = Data(m_count, initial);
 	}
@@ -196,6 +221,19 @@ namespace Orion
         return (index != NO_INDEX) ? get(index) : defaultValue;
 	}
 
+    template<typename T, typename TCoord>
+    inline T Grid<T, TCoord>::getOrDefault(Index index) const
+    {
+        return isValidIndex(index) ? get(index) : m_default;
+    }
+
+    template<typename T, typename TCoord>
+    inline T Grid<T, TCoord>::getOrDefault(Vec2<TCoord> location) const
+    {
+        const auto index = getIndex(location);
+        return (index != NO_INDEX) ? get(index) : m_default;
+    }
+
 	template<typename T, typename TCoord>
 	inline T& Grid<T, TCoord>::getRefUnchecked(Index index)
 	{
@@ -214,11 +252,87 @@ namespace Orion
         m_data[index] = value;
 	}
 
+    template<typename T, typename TCoord>
+    inline void Grid<T, TCoord>::set(Index index, const T& value)
+    {
+        m_data[index] = value;
+    }
+
 	template<typename T, typename TCoord>
 	inline void Grid<T, TCoord>::set(Vec2<TCoord> location, T&& value)
 	{
-        m_data[getIndex(location)] = value;
+        m_data[getIndexUnchecked(location)] = value;
 	}
+
+    template<typename T, typename TCoord>
+    inline void Grid<T, TCoord>::set(Vec2<TCoord> location, const T& value)
+    {
+        m_data[getIndexUnchecked(location)] = value;
+    }
+
+    template<typename T, typename TCoord>
+    inline bool Grid<T, TCoord>::setIfValidIndex(Index index, T&& value)
+    {
+        if (!isValidIndex(index)) return false;
+
+        set(index, value);
+        return true;
+    }
+
+    template<typename T, typename TCoord>
+    inline bool Grid<T, TCoord>::setIfValidIndex(Index index, const T& value)
+    {
+        if (!isValidIndex(index)) return false;
+
+        set(index, value);
+        return true;
+    }
+
+    template<typename T, typename TCoord>
+    inline bool Grid<T, TCoord>::setIfValidLocation(Vec2<TCoord> location, T&& value)
+    {
+        if (!isValidLocation(location)) return false;
+
+        set(location, value);
+        return true;
+    }
+
+    template<typename T, typename TCoord>
+    inline bool Grid<T, TCoord>::setIfValidLocation(Vec2<TCoord> location, const T& value)
+    {
+        if (!isValidLocation(location)) return false;
+
+        set(location, value);
+        return true;
+    }
+
+    template<typename T, typename TCoord>
+    inline T Grid<T, TCoord>::setAndReturnPrevious(Index index, T&& value)
+    {
+        auto prev = get(index);
+        set(index, value);
+        return prev;
+    }
+
+    template<typename T, typename TCoord>
+    inline T Grid<T, TCoord>::setAndReturnPrevious(Index index, const T& value)
+    {
+        auto prev = get(index);
+        set(index, value);
+        return prev;
+    }
+
+    template<typename T, typename TCoord>
+    inline T Grid<T, TCoord>::setAndReturnPrevious(Vec2<TCoord> location, T&& value)
+    {
+        return setAndReturnPrevious(getIndexUnchecked(location), value);
+    }
+
+    template<typename T, typename TCoord>
+    inline T Grid<T, TCoord>::setAndReturnPrevious(Vec2<TCoord> location, const T& value)
+    {
+        return setAndReturnPrevious(getIndexUnchecked(location), value);
+    }
 
 	template<typename T, typename TCoord>
 	inline bool Grid<T, TCoord>::isEdge(Index index) const
@@ -275,6 +389,25 @@ namespace Orion
 
 		ASS(false, "Invalid direction provided: " << (int)direction);
 		return NO_INDEX;
+	}
+
+    template<typename T, typename TCoord>
+    inline T Grid<T, TCoord>::getAdjacentOr(Vec2<TCoord> location, Dir8 direction, T defaultValue) const
+    {
+        const auto neighbour = getNeighbour(location, direction);
+        return (neighbour != NO_CELL ? get(neighbour) : defaultValue);
+    }
+
+	template<typename T, typename TCoord>
+	inline T Grid<T, TCoord>::getAdjacentUnchecked(Vec2<TCoord> location, Dir8 direction) const
+	{
+        return get(getNeighbour(location, direction));
+	}
+
+	template<typename T, typename TCoord>
+	inline T Grid<T, TCoord>::getAdjacentUnchecked(Index index, Dir8 direction) const
+	{
+        return get(getNeighbourIndexUnchecked(index, direction));
 	}
 
 	// Returns the number of cells that exist from the given location in the given direction.  Assumes current location is valid

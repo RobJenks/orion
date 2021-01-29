@@ -114,6 +114,9 @@
     <ClCompile Include="..\..\..\orion\src\engine\renderer\queue\render_queues.cpp">
       <Filter>src\engine\renderer\queue</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\orion\src\container\container.cpp">
+      <Filter>src\container</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\orion\src\main\orion.h">

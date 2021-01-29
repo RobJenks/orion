@@ -29,10 +29,14 @@ namespace Orion
 		init.resolution.width = width;
 		init.resolution.height = height;
 		init.resolution.reset = reset;
+
+		LOG_INFO("Renderer configuration [type: " << init.type << ", pciId: " << init.vendorId << ", res: " << Vec2<uint32_t>(width, height) << "]");
 		if (!bgfx::init(init))
 		{
 			RETURN_LOG_ERROR("Could not initialise core rendering libraries", ResultCodes::CouldNotInitEngineLibrary);
 		}
+
+		bgfx::reset(width, height);
 
 		// Set debug levels
 		bgfx::setDebug(debug);
