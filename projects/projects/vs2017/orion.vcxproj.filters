@@ -227,6 +227,9 @@
     <ClInclude Include="..\..\..\orion\src\util\type_defaults.h">
       <Filter>src\util</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\orion\src\engine\renderer\camera\camera_mode.h">
+      <Filter>src\engine\renderer\camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\orion\shaders\instanced_texture\fs_instanced_texture.sc">

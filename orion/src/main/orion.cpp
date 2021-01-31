@@ -77,8 +77,6 @@ namespace Orion
 			renderState.width = m_width;
 			renderState.height = m_height;
 			renderState.mouse_state = &m_mouseState;
-			renderState.view_at = { 0.0f, 0.0f, 0.0f };
-			renderState.view_dir = { 0.0f, 0.0f, -200.0f };
 			
 			_renderTemporaryCube();
 			_renderTemporaryTiles(renderState);

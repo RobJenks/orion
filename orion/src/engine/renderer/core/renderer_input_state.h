@@ -11,8 +11,5 @@ struct RendererInputState
 
 	float								frame_ms;
 
-	bx::Vec3							view_at;
-	bx::Vec3							view_dir;
-
 	const entry::MouseState *			mouse_state;
 };

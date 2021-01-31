@@ -338,6 +338,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\orion\src\container\container.h" />
     <ClInclude Include="..\..\..\orion\src\engine\renderer\camera\camera.h" />
+    <ClInclude Include="..\..\..\orion\src\engine\renderer\camera\camera_mode.h" />
     <ClInclude Include="..\..\..\orion\src\engine\renderer\core\renderer.h" />
     <ClInclude Include="..\..\..\orion\src\engine\renderer\core\renderer_input_state.h" />
     <ClInclude Include="..\..\..\orion\src\engine\renderer\debug\render_stats.h" />
