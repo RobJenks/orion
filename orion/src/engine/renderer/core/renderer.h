@@ -42,6 +42,8 @@ namespace Orion
 		inline RenderQueues& queue() { return m_queues; }
 		const inline RenderQueues& queue() const { return m_queues; }
 
+		inline const RenderStats& getRenderStats() { return m_renderStats; }
+
 		void submitImmediate(const RenderConfig& config);
 		void submitImmediate(const RenderConfig& config, float transform[16]);
 		

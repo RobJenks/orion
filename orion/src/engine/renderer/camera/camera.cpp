@@ -74,13 +74,18 @@ namespace Orion
 
     void Camera::moveTopDownCamera(Vec2<float> delta)
     {
-		m_topdown_pos += delta;
+		m_topdown_pos = getTopDownCameraPos() + delta;
     }
 
 	void Camera::setTopDownCameraHeight(float height)
 	{
 		ASS(height > 0, "Invalid topdown camera height: " << m_topdown_height);
 		m_topdown_height = height;
+	}
+
+	void Camera::adjustTopDownCameraHeight(float delta)
+	{
+		setTopDownCameraHeight(getTopDownCameraHeight() + delta);
 	}
 
     void Camera::shutdown()

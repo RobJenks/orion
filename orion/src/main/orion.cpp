@@ -1,4 +1,5 @@
 #include <bx/uint32_t.h>
+#include <entry/input.h>
 #include "common.h"
 #include "bgfx_utils.h"
 #include "imgui/imgui.h"
@@ -22,7 +23,8 @@ namespace Orion
         m_reset(0U),
 		m_renderer(),
 
-		tmp_data(Vec2<Container::Coord>(10, 10))
+		tmp_data(Vec2<Container::Coord>(10, 10)),
+		tmp_pos({ 0,0 })
     {
     }
 
@@ -78,9 +80,11 @@ namespace Orion
 			renderState.height = m_height;
 			renderState.mouse_state = &m_mouseState;
 			
+			if (!_captureTemporaryInput(renderState)) return false;
+			
 			_renderTemporaryCube();
 			_renderTemporaryTiles(renderState);
-
+						
 			m_renderer.frame(renderState);
 
             return true;
@@ -88,6 +92,42 @@ namespace Orion
 
         return false;
     }
+
+	// Temporary
+	bool Orion::_captureTemporaryInput(const RendererInputState& state)
+	{
+		if (inputGetKeyState(entry::Key::Esc, nullptr)) return false;
+
+		const float BASE_MOVE = 100000.0f;
+		const float BASE_ZOOM = 10.0f;
+
+		uint8_t modifiers;
+		Vec2<float> delta(0.0f, 0.0f);
+
+		if (inputGetKeyState(entry::Key::KeyW, &modifiers)) delta += Vec2<float>(0.0f, +1.0f * _getTemporaryMoveDelta(BASE_MOVE, modifiers));
+		if (inputGetKeyState(entry::Key::KeyS, &modifiers)) delta += Vec2<float>(0.0f, -1.0f * _getTemporaryMoveDelta(BASE_MOVE, modifiers));
+		if (inputGetKeyState(entry::Key::KeyA, &modifiers)) delta += Vec2<float>(-1.0f * _getTemporaryMoveDelta(BASE_MOVE, modifiers), 0.0f);
+		if (inputGetKeyState(entry::Key::KeyD, &modifiers)) delta += Vec2<float>(+1.0f * _getTemporaryMoveDelta(BASE_MOVE, modifiers), 0.0f);
+		
+		tmp_pos += delta;
+		m_renderer.getCamera().moveTopDownCamera(delta);
+
+		static int32_t last_mouse_wheel = 0;
+		auto wheel_delta = state.mouse_state->m_mz - last_mouse_wheel;
+		if (wheel_delta > 0) m_renderer.getCamera().adjustTopDownCameraHeight(-1.0f * BASE_ZOOM);
+		if (wheel_delta < 0) m_renderer.getCamera().adjustTopDownCameraHeight(+1.0f * BASE_ZOOM);
+		last_mouse_wheel = state.mouse_state->m_mz;
+		
+		return true;
+	}
+
+	float Orion::_getTemporaryMoveDelta(float base, uint8_t modifiers)
+	{
+		const float frame_pc = float(m_renderer.getRenderStats().getFrameMs()) * (1.0f / 1000.0f);
+		const float speed_mult = (modifiers & entry::Modifier::LeftShift ? 10.0f : 1.0f);
+
+		return base * speed_mult * frame_pc;
+	}
 
 	// Temporary
 	void Orion::_renderTemporaryCube()

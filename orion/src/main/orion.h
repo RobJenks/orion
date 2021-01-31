@@ -27,6 +27,8 @@ namespace Orion
 
 	private:
 
+		bool _captureTemporaryInput(const RendererInputState& state);
+		float _getTemporaryMoveDelta(float base, uint8_t modifiers);
 		void _renderTemporaryCube();
 		void _renderTemporaryTiles(const RendererInputState & state);
 
@@ -43,5 +45,6 @@ namespace Orion
 
 		// Temporary
 		Container tmp_data;
+		Vec2<float> tmp_pos;
     };
 };

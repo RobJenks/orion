@@ -34,7 +34,9 @@ namespace Orion
 
 		void setTopDownCameraPos(Vec2<float> pos);
 		void moveTopDownCamera(Vec2<float> delta);
+
 		void setTopDownCameraHeight(float height);
+		void adjustTopDownCameraHeight(float delta);
 
 		void shutdown();
 

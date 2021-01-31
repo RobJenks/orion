@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <sstream>
 
 namespace Orion
 {
@@ -28,6 +29,7 @@ namespace Orion
 		Vec2<T> & operator*=(const Vec2<T>& other);
 		Vec2<T> & operator/=(const Vec2<T>& other);
 
+		std::string str() const;
 	};
 
 
@@ -163,4 +165,13 @@ namespace Orion
 		ss << '(' << v.x << ',' << v.y << ')';
 		return ss;
 	}
+
+	template<typename T>
+	inline std::string Vec2<T>::str() const
+	{
+		std::ostringstream ss;
+		ss << *this;
+		return ss.str();
+	}
+
 }

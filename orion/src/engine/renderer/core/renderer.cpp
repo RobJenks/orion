@@ -204,6 +204,7 @@ namespace Orion
     void Renderer::renderDebugInfo()
     {
         bgfx::dbgTextPrintf(0, 0, 0x0f, "FPS: %.1f", m_renderStats.getFps());
+		bgfx::dbgTextPrintf(0, 1, 0x0f, "Pos: %s @ %.1f", m_camera.getTopDownCameraPos().str().c_str(), m_camera.getTopDownCameraHeight());
     }
 
 	void Renderer::shutdown()
