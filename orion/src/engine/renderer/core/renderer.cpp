@@ -131,7 +131,6 @@ namespace Orion
 
 	ResultCode Renderer::executeFrame(const RendererInputState& state)
 	{
-
 		RETURN_ON_ERROR(m_shaders.executeFrame(state));
 		RETURN_ON_ERROR(m_geometry.executeFrame(state));
 		RETURN_ON_ERROR(m_textures.executeFrame(state));

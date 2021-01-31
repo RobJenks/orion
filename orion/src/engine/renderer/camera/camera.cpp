@@ -20,7 +20,7 @@ namespace Orion
 		bx::mtxLookAt(view, state.view_dir, state.view_at);
 
 		float proj[16];
-		bx::mtxProj(proj, 60.0f, float(state.width) / float(state.height), 0.1f, 100.0f, bgfx::getCaps()->homogeneousDepth);
+		bx::mtxProj(proj, 60.0f, float(state.width) / float(state.height), 0.1f, 1000.0f, bgfx::getCaps()->homogeneousDepth);
 		bgfx::setViewTransform(0, view, proj);
 
 		bgfx::setViewRect(0, 0, 0, uint16_t(state.width), uint16_t(state.height));

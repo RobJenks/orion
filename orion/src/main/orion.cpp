@@ -44,8 +44,20 @@ namespace Orion
 		}
 
 		// Temporary
-		ASS(tmp_data.addTile(Tile(1, Dir4::UP, { 1,2 })), "Add failed");
-		tmp_data.addTileUnchecked(Tile(12, Dir4::RIGHT, { 4,4 }));
+		const auto tiles = std::vector<Tile>({
+			Tile(1, Dir4::UP, { 1,1 }),
+			Tile(1, Dir4::UP, { 2,1 }),
+			Tile(1, Dir4::UP, { 3,1 }),
+			Tile(1, Dir4::UP, { 3,2 }),
+			Tile(1, Dir4::UP, { 3,3 }),
+			Tile(1, Dir4::UP, { 4,3 }),
+			Tile(1, Dir4::UP, { 5,3 }),
+		});
+
+		std::for_each(tiles.cbegin(), tiles.cend(), [&](const Tile& tile) {
+			ASS(tmp_data.addTile(tile), "Add failed");
+		});
+//		tmp_data.addTileUnchecked(Tile(12, Dir4::RIGHT, { 4,4 }));
 
     }
 
@@ -66,7 +78,7 @@ namespace Orion
 			renderState.height = m_height;
 			renderState.mouse_state = &m_mouseState;
 			renderState.view_at = { 0.0f, 0.0f, 0.0f };
-			renderState.view_dir = { 0.0f, 0.0f, -35.0f };
+			renderState.view_dir = { 0.0f, 0.0f, -200.0f };
 			
 			_renderTemporaryCube();
 			_renderTemporaryTiles(renderState);
@@ -110,27 +122,27 @@ namespace Orion
 
 		InstanceData inst;
 		float scale[16], trans[16];
-		bx::mtxScale(scale, 1.0f);
+		bx::mtxScale(scale, 10.0f);
 
 		if (renderer_state.width == 121212121) std::cout << "";
 
-		for (int i = 0; i < 4; ++i)
+		//for (int i = 0; i < 4; ++i)
+		//{
+		//	bx::mtxTranslate(trans, (i == 0) ? -36.0f : 35.0f, 18.0f, 0);
+		//	//bx::mtxTranslate(trans, 0.0f + (float(i) * 20.0f), 15.0f, 0.0f);
+		//	bx::mtxMul(inst.transform, scale, trans);
+
+		//	m_renderer.queue().primary().submit(config, inst);
+		//}
+
+		const auto & tiles = tmp_data.getTiles();
+		for (const auto& tile : tiles)
 		{
-			bx::mtxTranslate(trans, (i == 0) ? -36.0f : 35.0f, 18.0f, 0);
-			//bx::mtxTranslate(trans, 0.0f + (float(i) * 20.0f), 15.0f, 0.0f);
+			bx::mtxTranslate(trans, (float(tile.getLocation().x) * 20.0f), (float(tile.getLocation().y) * 20.0f), 0.0f);
 			bx::mtxMul(inst.transform, scale, trans);
 
 			m_renderer.queue().primary().submit(config, inst);
 		}
-
-	/*	const auto & tiles = tmp_data.getTiles();
-		for (const auto& tile : tiles)
-		{
-			bx::mtxTranslate(trans, -30.0f + (float(tile.getLocation().x) * 20.0f), 15.0f + (float(tile.getLocation().y) * 20.0f), 0.0f);
-			bx::mtxMul(inst.transform, scale, trans);
-
-			m_renderer.queue().primary().submit(config, inst);
-		}*/
 	}
 }
 

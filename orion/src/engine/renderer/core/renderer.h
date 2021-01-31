@@ -119,6 +119,10 @@ namespace Orion
 			memcpy((void*)instanceBuffer.data, (const void*)instances.data(), count * sizeof(T));
 			bgfx::setInstanceDataBuffer(&instanceBuffer);
 
+			/*float id[16];
+			bx::mtxIdentity(id);
+			bgfx::setTransform(id);*/
+
 			// Submit draw call
 			submitWithRenderConfig(slot.getConfig());
 		}
